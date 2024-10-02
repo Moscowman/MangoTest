@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Mango Test</string>
+    <string name="app_name">Тестовое задание Mango</string>
+    <string name="phone_edit_label">Введите номер телефона</string>
+    <string name="get_confirmation_code_button_label">Получить код</string>
+    <string name="confirmation_code_textfield_suggestion">Код подтверждения</string>
+    <string name="enter_system_button_label">Войти в систему</string>
+    <string name="authorization_screen_label">Вход в систему</string>
 </resources>

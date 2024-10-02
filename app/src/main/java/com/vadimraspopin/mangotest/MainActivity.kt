@@ -3,45 +3,28 @@ package com.vadimraspopin.mangotest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.vadimraspopin.mangotest.ui.theme.MangoTestTheme
+import com.vadimraspopin.mangotest.api.AuthApiService
+import com.vadimraspopin.mangotest.datasource.AuthRemoteDataSourceImpl
+import com.vadimraspopin.mangotest.repository.AuthRepositoryImpl
+import com.vadimraspopin.mangotest.ui.AuthorizationScreen
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://your.api.url/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val apiService = retrofit.create(AuthApiService::class.java)
+        val authRemoteDataSource = AuthRemoteDataSourceImpl(apiService)
+        val authRepository = AuthRepositoryImpl(authRemoteDataSource)
+        val authViewModel = AuthViewModel(authRepository)
+
         setContent {
-            MangoTestTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            AuthorizationScreen(authViewModel)
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MangoTestTheme {
-        Greeting("Android")
     }
 }
