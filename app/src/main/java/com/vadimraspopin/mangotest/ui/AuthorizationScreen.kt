@@ -1,5 +1,7 @@
 package com.vadimraspopin.mangotest.ui
 
+import android.content.Context
+import android.telephony.TelephonyManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,13 +25,22 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.joelkanyi.jcomposecountrycodepicker.component.KomposeCountryCodePicker
+import com.joelkanyi.jcomposecountrycodepicker.component.rememberKomposeCountryCodePickerState
 import com.vadimraspopin.mangotest.AuthViewModel
 import com.vadimraspopin.mangotest.R
 import com.vadimraspopin.mangotest.models.AuthResponse
@@ -38,8 +49,15 @@ import com.vadimraspopin.mangotest.repository.AuthRepository
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthorizationScreen(authViewModel: AuthViewModel) {
-    val phone = remember { mutableStateOf(TextFieldValue("+7")) }
-    val code = remember { mutableStateOf(TextFieldValue()) }
+    val code = remember { mutableStateOf("") }
+    val phoneNumber = rememberSaveable { mutableStateOf("") }
+
+    val context = LocalContext.current
+    val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+    val countryCode = tm.networkCountryIso
+    val state = rememberKomposeCountryCodePickerState(
+        defaultCountryCode = countryCode,
+    )
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -69,7 +87,17 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
         ) {
 
             OutlinedTextField(
-                value = phone.value,
+                value = phoneNumber.value,
+
+                leadingIcon = {
+                    KomposeCountryCodePicker(
+                        modifier = Modifier,
+                        showOnlyCountryCodePicker = true,
+                        text = phoneNumber.value,
+                        state = state,
+                        onValueChange = {}
+                    )
+                },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = MaterialTheme.colorScheme.onSurface,
                     unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -79,9 +107,10 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
                     focusedLabelColor = MaterialTheme.colorScheme.primary,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
-                onValueChange = { phone.value = it },
+                onValueChange = { phoneNumber.value =
+                    it.filter { char -> char.isDigit() || char == '-' || char == ' ' } },
                 label = { Text(stringResource(R.string.phone_edit_label)) },
-                placeholder = { Text("+7 XXX XXX XXXX") },
+                placeholder = { Text("XXX XXX-XX XX") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
@@ -115,7 +144,12 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
                     unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
 
-                onValueChange = { code.value = it },
+                onValueChange = { newText ->
+                    val digitsOnly = newText.filter { it.isDigit() }
+                    if (digitsOnly.length <= 6) {
+                        code.value = digitsOnly
+                    }
+                },
                 label = { Text(stringResource(R.string.confirmation_code_textfield_suggestion)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 singleLine = true,
