@@ -8,9 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vadimraspopin.mangotest.models.AuthResponse
 import com.vadimraspopin.mangotest.repository.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AuthViewModel(val authRepository: AuthRepository) : ViewModel() {
+@HiltViewModel
+class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : ViewModel() {
 
     var phone by mutableStateOf(TextFieldValue())
     var code by mutableStateOf(TextFieldValue())

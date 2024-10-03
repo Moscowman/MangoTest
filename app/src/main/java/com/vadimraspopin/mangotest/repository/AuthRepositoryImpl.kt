@@ -3,8 +3,9 @@ package com.vadimraspopin.mangotest.repository
 import com.vadimraspopin.mangotest.api.toDomainModel
 import com.vadimraspopin.mangotest.datasource.AuthRemoteDataSource
 import com.vadimraspopin.mangotest.models.AuthResponse
+import javax.inject.Inject
 
-class AuthRepositoryImpl(private val remoteDataSource: AuthRemoteDataSource) : AuthRepository {
+class AuthRepositoryImpl @Inject constructor(private val remoteDataSource: AuthRemoteDataSource) : AuthRepository {
     override suspend fun sendAuthCode(phone: String) {
         remoteDataSource.sendAuthCode(phone)
     }

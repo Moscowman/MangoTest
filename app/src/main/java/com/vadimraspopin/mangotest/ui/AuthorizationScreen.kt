@@ -101,8 +101,10 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
                     focusedLabelColor = MaterialTheme.colorScheme.primary,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
-                onValueChange = { phoneNumber.value =
-                    it.filter { char -> char.isDigit() || char == '-' || char == ' ' } },
+                onValueChange = {
+                    phoneNumber.value =
+                        it.filter { char -> char.isDigit() || char == '-' || char == ' ' }
+                },
                 label = { Text(stringResource(R.string.phone_edit_label)) },
                 placeholder = { Text("XXX XXX-XX XX") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
