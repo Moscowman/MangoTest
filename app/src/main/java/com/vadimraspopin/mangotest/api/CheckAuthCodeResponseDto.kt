@@ -1,6 +1,6 @@
 package com.vadimraspopin.mangotest.api
 
-data class AuthResponseDto(
+data class CheckAuthCodeResponseDto(
     val refreshToken: String,
     val accessToken: String,
     val userId: Long,

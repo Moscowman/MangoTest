@@ -1,8 +1,6 @@
 package com.vadimraspopin.mangotest
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vadimraspopin.mangotest.repository.AuthRepository
@@ -19,15 +17,17 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : ViewModel() {
 
-    var phone by mutableStateOf("")
-    var code by mutableStateOf(0)
+    var phoneNumber = mutableStateOf("")
+    var code = mutableStateOf("")
+    var fullPhoneNumber: String? = null
 
     private val _authState = MutableStateFlow<AuthUiState<Any>>(AuthUiState.Idle)
     val authState: StateFlow<AuthUiState<Any>> = _authState.asStateFlow()
 
     fun sendAuthCode() {
+        if (fullPhoneNumber == null) return
         viewModelScope.launch {
-            authRepository.sendAuthCode(phone)
+            authRepository.sendAuthCode(fullPhoneNumber!!)
                 .onStart {
                     _authState.value = AuthUiState.Loading
                 }
@@ -42,7 +42,7 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
 
     fun checkAuthCode() {
         viewModelScope.launch {
-            authRepository.checkAuthCode(phone, code)
+            authRepository.checkAuthCode(phoneNumber.value, code.value)
                 .onStart {
                     _authState.value = AuthUiState.Loading
                 }

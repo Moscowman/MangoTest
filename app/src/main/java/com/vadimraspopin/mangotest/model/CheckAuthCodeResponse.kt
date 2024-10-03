@@ -1,6 +1,6 @@
-package com.vadimraspopin.mangotest.models
+package com.vadimraspopin.mangotest.model
 
-data class AuthResponse(
+data class CheckAuthCodeResponse(
     val refreshToken: String,
     val accessToken: String,
     val userId: Long,

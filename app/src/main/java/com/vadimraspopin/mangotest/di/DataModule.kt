@@ -35,7 +35,7 @@ object DataModule {
     @Singleton
     fun provideApiService(): AuthApiService {
         return Retrofit.Builder()
-            .baseUrl("https://your.api.url/")
+            .baseUrl("https://plannerok.ru/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(AuthApiService::class.java)

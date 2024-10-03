@@ -23,9 +23,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,16 +35,20 @@ import com.joelkanyi.jcomposecountrycodepicker.component.KomposeCountryCodePicke
 import com.joelkanyi.jcomposecountrycodepicker.component.rememberKomposeCountryCodePickerState
 import com.vadimraspopin.mangotest.AuthViewModel
 import com.vadimraspopin.mangotest.R
-import com.vadimraspopin.mangotest.models.AuthResponse
+import com.vadimraspopin.mangotest.model.CheckAuthCodeResponse
 import com.vadimraspopin.mangotest.repository.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.lang.Character.isDigit
+
+const val CODE_MAX_LENGTH = 6
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthorizationScreen(authViewModel: AuthViewModel) {
-    val code = remember { mutableStateOf("") }
-    val phoneNumber = rememberSaveable { mutableStateOf("") }
+
+    val code = authViewModel.code
+    val phoneNumber = authViewModel.phoneNumber
 
     val context = LocalContext.current
     val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -108,7 +110,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
                         it.filter { char -> char.isDigit() || char == '-' || char == ' ' }
                 },
                 label = { Text(stringResource(R.string.phone_edit_label)) },
-                placeholder = { Text("XXX XXX-XX XX") },
+                placeholder = { Text("XXX XXX-XX-XX") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
@@ -117,7 +119,12 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = {},
+                onClick = {
+                    val fullPhoneNumber = countryCodePickerState.getFullPhoneNumber()
+                    authViewModel.fullPhoneNumber = fullPhoneNumber
+                    authViewModel.sendAuthCode()
+                },
+                enabled = phoneNumber.value.filter { it -> isDigit(it) }.isNotEmpty(),
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
                 colors = ButtonDefaults.buttonColors(
@@ -131,7 +138,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
             Spacer(modifier = Modifier.height(24.dp))
 
             OutlinedTextField(
-                value = code.value,
+                value = code.value.toString(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = MaterialTheme.colorScheme.onSurface,
                     unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -141,10 +148,9 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
                     focusedLabelColor = MaterialTheme.colorScheme.primary,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
-
                 onValueChange = { newText ->
                     val digitsOnly = newText.filter { it.isDigit() }
-                    if (digitsOnly.length <= 6) {
+                    if (digitsOnly.length <= CODE_MAX_LENGTH) {
                         code.value = digitsOnly
                     }
                 },
@@ -158,6 +164,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
 
             Button(
                 onClick = {},
+                enabled = code.value.length == CODE_MAX_LENGTH,
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
                 colors = ButtonDefaults.buttonColors(
@@ -176,16 +183,18 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
 fun AuthorizationScreenPreview() {
     val fakeAuthRepository = object : AuthRepository {
         override fun sendAuthCode(phone: String): Flow<Unit> {
-            return TODO("Provide the return value")
+            return TODO()
         }
 
-        override fun checkAuthCode(phone: String, code: Int): Flow<AuthResponse> {
+        override fun checkAuthCode(phone: String, code: String): Flow<CheckAuthCodeResponse> {
             return flow {
-                emit (AuthResponse(
-                    refreshToken = "",
-                    accessToken = "",
-                    userId = 0,
-                    isUserExists = false)
+                emit(
+                    CheckAuthCodeResponse(
+                        refreshToken = "",
+                        accessToken = "",
+                        userId = 0,
+                        isUserExists = false
+                    )
                 )
             }
         }
