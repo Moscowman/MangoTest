@@ -3,6 +3,7 @@ package com.vadimraspopin.mangotest
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vadimraspopin.mangotest.api.ValidationException
 import com.vadimraspopin.mangotest.model.CheckAuthCodeResponse
 import com.vadimraspopin.mangotest.repository.AuthRepository
 import com.vadimraspopin.mangotest.ui.ApiUiRequestState
@@ -23,11 +24,15 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     var code = mutableStateOf("")
     var fullPhoneNumber: String? = null
 
-    private val _sendAuthCodeState = MutableStateFlow<ApiUiRequestState<SendAuthCodeResponse>>(ApiUiRequestState.Idle)
-    val sendAuthCodeState: StateFlow<ApiUiRequestState<SendAuthCodeResponse>> = _sendAuthCodeState.asStateFlow()
+    private val _sendAuthCodeState =
+        MutableStateFlow<ApiUiRequestState<SendAuthCodeResponse>>(ApiUiRequestState.Idle)
+    val sendAuthCodeState: StateFlow<ApiUiRequestState<SendAuthCodeResponse>> =
+        _sendAuthCodeState.asStateFlow()
 
-    private val _checkAuthCodeState = MutableStateFlow<ApiUiRequestState<CheckAuthCodeResponse>>(ApiUiRequestState.Idle)
-    val checkAuthCodeState: StateFlow<ApiUiRequestState<SendAuthCodeResponse>> = _sendAuthCodeState.asStateFlow()
+    private val _checkAuthCodeState =
+        MutableStateFlow<ApiUiRequestState<CheckAuthCodeResponse>>(ApiUiRequestState.Idle)
+    val checkAuthCodeState: StateFlow<ApiUiRequestState<CheckAuthCodeResponse>> =
+        _checkAuthCodeState.asStateFlow()
 
     fun sendAuthCode() {
         if (fullPhoneNumber == null) return
@@ -37,7 +42,15 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                     _sendAuthCodeState.value = ApiUiRequestState.Loading
                 }
                 .catch { e ->
-                    _sendAuthCodeState.value = ApiUiRequestState.Error(e.message ?: "Unknown error")
+                    when (e) {
+                        is ValidationException ->
+                            _sendAuthCodeState.value =
+                                ApiUiRequestState.Error(e.error.detail.message)
+
+                        else ->
+                            _sendAuthCodeState.value =
+                                ApiUiRequestState.Error(e.message ?: "Unknown error")
+                    }
                 }
                 .collect { value ->
                     _sendAuthCodeState.value = ApiUiRequestState.Success(value)
@@ -46,13 +59,22 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     }
 
     fun checkAuthCode() {
+        if (fullPhoneNumber == null) return
         viewModelScope.launch {
-            authRepository.checkAuthCode(phoneNumber.value, code.value)
+            authRepository.checkAuthCode(fullPhoneNumber!!, code.value)
                 .onStart {
                     _checkAuthCodeState.value = ApiUiRequestState.Loading
                 }
                 .catch { e ->
-                    _checkAuthCodeState.value = ApiUiRequestState.Error(e.message ?: "Unknown error")
+                    when (e) {
+                        is ValidationException ->
+                            _checkAuthCodeState.value =
+                                ApiUiRequestState.Error(e.error.detail.message)
+
+                        else ->
+                            _checkAuthCodeState.value =
+                                ApiUiRequestState.Error(e.message ?: "Unknown error")
+                    }
                 }
                 .collect { response ->
                     _checkAuthCodeState.value = ApiUiRequestState.Success(response)

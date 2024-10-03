@@ -54,6 +54,7 @@ const val CODE_MAX_LENGTH = 6
 fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
 
     val sendAuthCodeState by authViewModel.sendAuthCodeState.collectAsState()
+    val checkAuthCodeState by authViewModel.checkAuthCodeState.collectAsState()
 
     val code = authViewModel.code
     val phoneNumber = authViewModel.phoneNumber
@@ -153,6 +154,8 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                 Text(stringResource(R.string.get_confirmation_code_button_label))
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             if (sendAuthCodeState is ApiUiRequestState.Loading) {
                 CircularProgressIndicator(
                     modifier = Modifier
@@ -188,10 +191,23 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                     modifier = Modifier.fillMaxWidth()
                 )
 
+                if (checkAuthCodeState is ApiUiRequestState.Error) {
+                    val errorMessage = (checkAuthCodeState as ApiUiRequestState.Error).message
+                    Text(
+                        text = localizeCheckAuthCodeErrorMessage(errorMessage),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = {},
+                    onClick = {
+                        authViewModel.code = code
+                        authViewModel.checkAuthCode()
+                    },
                     enabled = code.value.length == CODE_MAX_LENGTH,
                     modifier = Modifier.fillMaxWidth(),
                     shape = MaterialTheme.shapes.medium,
@@ -203,7 +219,27 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                     Text(stringResource(R.string.enter_system_button_label))
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (checkAuthCodeState is ApiUiRequestState.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(50.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
+
+
         }
+    }
+}
+
+@Composable
+fun localizeCheckAuthCodeErrorMessage(message: String): String {
+    if (message == "Not valid auth code") {
+        return stringResource(R.string.check_auth_code_not_valid_error_message)
+    } else {
+        return message
     }
 }
 

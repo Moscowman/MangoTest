@@ -5,4 +5,5 @@
     <string name="confirmation_code_textfield_suggestion">Код подтверждения</string>
     <string name="enter_system_button_label">Войти в систему</string>
     <string name="authorization_screen_label">Вход в систему</string>
+    <string name="check_auth_code_not_valid_error_message">Неверный код авторизации</string>
 </resources>
