@@ -24,10 +24,10 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     var fullPhoneNumber: String? = null
 
     private val _sendAuthCodeState = MutableStateFlow<ApiUiRequestState<SendAuthCodeResponse>>(ApiUiRequestState.Idle)
-    val sendAuthCodeState: StateFlow<ApiUiRequestState<Any>> = _sendAuthCodeState.asStateFlow()
+    val sendAuthCodeState: StateFlow<ApiUiRequestState<SendAuthCodeResponse>> = _sendAuthCodeState.asStateFlow()
 
     private val _checkAuthCodeState = MutableStateFlow<ApiUiRequestState<CheckAuthCodeResponse>>(ApiUiRequestState.Idle)
-    val checkAuthCodeState: StateFlow<ApiUiRequestState<Any>> = _sendAuthCodeState.asStateFlow()
+    val checkAuthCodeState: StateFlow<ApiUiRequestState<SendAuthCodeResponse>> = _sendAuthCodeState.asStateFlow()
 
     fun sendAuthCode() {
         if (fullPhoneNumber == null) return

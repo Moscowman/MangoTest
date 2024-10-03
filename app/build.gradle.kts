@@ -56,6 +56,7 @@ dependencies {
     implementation (libs.converter.gson)
     implementation(libs.hilt.android)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
