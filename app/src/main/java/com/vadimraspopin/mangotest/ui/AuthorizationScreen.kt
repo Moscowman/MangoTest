@@ -31,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,6 +66,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
     val countryCodePickerState = rememberKomposeCountryCodePickerState(
         defaultCountryCode = countryCode,
     )
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -139,6 +141,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
 
             Button(
                 onClick = {
+                    keyboardController?.hide()
                     val fullPhoneNumber = countryCodePickerState.getFullPhoneNumber()
                     authViewModel.fullPhoneNumber = fullPhoneNumber
                     authViewModel.sendAuthCode()
@@ -205,6 +208,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
 
                 Button(
                     onClick = {
+                        keyboardController?.hide()
                         authViewModel.code = code
                         authViewModel.checkAuthCode()
                     },
