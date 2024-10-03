@@ -4,7 +4,6 @@ import com.vadimraspopin.mangotest.api.toDomainModel
 import com.vadimraspopin.mangotest.datasource.AuthRemoteDataSource
 import com.vadimraspopin.mangotest.models.AuthResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 

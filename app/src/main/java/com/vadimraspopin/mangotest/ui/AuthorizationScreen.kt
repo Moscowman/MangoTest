@@ -2,7 +2,6 @@ package com.vadimraspopin.mangotest.ui
 
 import android.content.Context
 import android.telephony.TelephonyManager
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
