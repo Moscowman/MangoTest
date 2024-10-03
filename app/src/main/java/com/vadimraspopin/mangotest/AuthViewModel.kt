@@ -3,8 +3,10 @@ package com.vadimraspopin.mangotest
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vadimraspopin.mangotest.model.CheckAuthCodeResponse
 import com.vadimraspopin.mangotest.repository.AuthRepository
-import com.vadimraspopin.mangotest.ui.AuthUiState
+import com.vadimraspopin.mangotest.ui.ApiUiRequestState
+import com.vadimraspopin.mangotest.model.SendAuthCodeResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,21 +23,24 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
     var code = mutableStateOf("")
     var fullPhoneNumber: String? = null
 
-    private val _authState = MutableStateFlow<AuthUiState<Any>>(AuthUiState.Idle)
-    val authState: StateFlow<AuthUiState<Any>> = _authState.asStateFlow()
+    private val _sendAuthCodeState = MutableStateFlow<ApiUiRequestState<SendAuthCodeResponse>>(ApiUiRequestState.Idle)
+    val sendAuthCodeState: StateFlow<ApiUiRequestState<Any>> = _sendAuthCodeState.asStateFlow()
+
+    private val _checkAuthCodeState = MutableStateFlow<ApiUiRequestState<CheckAuthCodeResponse>>(ApiUiRequestState.Idle)
+    val checkAuthCodeState: StateFlow<ApiUiRequestState<Any>> = _sendAuthCodeState.asStateFlow()
 
     fun sendAuthCode() {
         if (fullPhoneNumber == null) return
         viewModelScope.launch {
             authRepository.sendAuthCode(fullPhoneNumber!!)
                 .onStart {
-                    _authState.value = AuthUiState.Loading
+                    _sendAuthCodeState.value = ApiUiRequestState.Loading
                 }
                 .catch { e ->
-                    _authState.value = AuthUiState.Error(e.message ?: "Unknown error")
+                    _sendAuthCodeState.value = ApiUiRequestState.Error(e.message ?: "Unknown error")
                 }
-                .collect {
-                    _authState.value = AuthUiState.Success(Unit)
+                .collect { value ->
+                    _sendAuthCodeState.value = ApiUiRequestState.Success(value)
                 }
         }
     }
@@ -44,13 +49,13 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
         viewModelScope.launch {
             authRepository.checkAuthCode(phoneNumber.value, code.value)
                 .onStart {
-                    _authState.value = AuthUiState.Loading
+                    _checkAuthCodeState.value = ApiUiRequestState.Loading
                 }
                 .catch { e ->
-                    _authState.value = AuthUiState.Error(e.message ?: "Unknown error")
+                    _checkAuthCodeState.value = ApiUiRequestState.Error(e.message ?: "Unknown error")
                 }
                 .collect { response ->
-                    _authState.value = AuthUiState.Success(response)
+                    _checkAuthCodeState.value = ApiUiRequestState.Success(response)
                 }
         }
     }

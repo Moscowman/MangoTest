@@ -36,6 +36,7 @@ import com.joelkanyi.jcomposecountrycodepicker.component.rememberKomposeCountryC
 import com.vadimraspopin.mangotest.AuthViewModel
 import com.vadimraspopin.mangotest.R
 import com.vadimraspopin.mangotest.model.CheckAuthCodeResponse
+import com.vadimraspopin.mangotest.model.SendAuthCodeResponse
 import com.vadimraspopin.mangotest.repository.AuthRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -182,7 +183,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
 @Composable
 fun AuthorizationScreenPreview() {
     val fakeAuthRepository = object : AuthRepository {
-        override fun sendAuthCode(phone: String): Flow<Unit> {
+        override fun sendAuthCode(phone: String): Flow<SendAuthCodeResponse> {
             return TODO()
         }
 
