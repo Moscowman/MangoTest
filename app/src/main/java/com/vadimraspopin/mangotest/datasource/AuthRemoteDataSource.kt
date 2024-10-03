@@ -1,8 +1,9 @@
 package com.vadimraspopin.mangotest.datasource
 
 import com.vadimraspopin.mangotest.api.AuthResponseDto
+import kotlinx.coroutines.flow.Flow
 
 interface AuthRemoteDataSource {
-    suspend fun sendAuthCode(phone: String)
-    suspend fun checkAuthCode(phone: String, code: String): AuthResponseDto
+    fun sendAuthCode(phone: String): Flow<Unit>
+    fun checkAuthCode(phone: String, code: Int): Flow<AuthResponseDto>
 }

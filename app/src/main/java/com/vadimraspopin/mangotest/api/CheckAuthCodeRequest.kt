@@ -1,4 +1,4 @@
 package com.vadimraspopin.mangotest.api
 
-data class CheckAuthCodeRequest(val phone: String, val code: String)
+data class CheckAuthCodeRequest(val phone: String, val code: Int)
 

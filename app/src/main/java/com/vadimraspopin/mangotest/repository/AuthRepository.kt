@@ -1,8 +1,9 @@
 package com.vadimraspopin.mangotest.repository
 
 import com.vadimraspopin.mangotest.models.AuthResponse
+import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
-    suspend fun sendAuthCode(phone: String)
-    suspend fun checkAuthCode(phone: String, code: String): AuthResponse
+    fun sendAuthCode(phone: String): Flow<Unit>
+    fun checkAuthCode(phone: String, code: Int): Flow<AuthResponse>
 }

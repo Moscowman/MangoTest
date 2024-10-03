@@ -2,6 +2,7 @@ package com.vadimraspopin.mangotest.ui
 
 import android.content.Context
 import android.telephony.TelephonyManager
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -39,6 +40,8 @@ import com.vadimraspopin.mangotest.AuthViewModel
 import com.vadimraspopin.mangotest.R
 import com.vadimraspopin.mangotest.models.AuthResponse
 import com.vadimraspopin.mangotest.repository.AuthRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +52,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
     val context = LocalContext.current
     val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
     val countryCode = tm.networkCountryIso
-    val state = rememberKomposeCountryCodePickerState(
+    val countryCodePickerState = rememberKomposeCountryCodePickerState(
         defaultCountryCode = countryCode,
     )
 
@@ -88,7 +91,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
                         modifier = Modifier,
                         showOnlyCountryCodePicker = true,
                         text = phoneNumber.value,
-                        state = state,
+                        state = countryCodePickerState,
                         onValueChange = {}
                     )
                 },
@@ -173,16 +176,19 @@ fun AuthorizationScreen(authViewModel: AuthViewModel) {
 @Composable
 fun AuthorizationScreenPreview() {
     val fakeAuthRepository = object : AuthRepository {
-        override suspend fun sendAuthCode(phone: String) {
+        override fun sendAuthCode(phone: String): Flow<Unit> {
+            return TODO("Provide the return value")
         }
 
-        override suspend fun checkAuthCode(phone: String, code: String): AuthResponse {
-            return AuthResponse(
-                refreshToken = "",
-                accessToken = "",
-                userId = 0,
-                isUserExists = false
-            )
+        override fun checkAuthCode(phone: String, code: Int): Flow<AuthResponse> {
+            return flow {
+                emit (AuthResponse(
+                    refreshToken = "",
+                    accessToken = "",
+                    userId = 0,
+                    isUserExists = false)
+                )
+            }
         }
     }
 
