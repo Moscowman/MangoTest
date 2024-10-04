@@ -39,6 +39,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.joelkanyi.jcomposecountrycodepicker.component.KomposeCountryCodePicker
 import com.joelkanyi.jcomposecountrycodepicker.component.rememberKomposeCountryCodePickerState
 import com.vadimraspopin.mangotest.AuthViewModel
@@ -54,7 +56,7 @@ const val CODE_MAX_LENGTH = 6
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
+fun AuthorizationScreen(navController: NavHostController, authViewModel: AuthViewModel = hiltViewModel()) {
 
     val sendAuthCodeState by authViewModel.sendAuthCodeState.collectAsState()
     val checkAuthCodeState by authViewModel.checkAuthCodeState.collectAsState()
@@ -238,16 +240,20 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                         .align(Alignment.CenterHorizontally)
                 )
             }
+
+            if (checkAuthCodeState is ApiUiRequestState.Success) {
+                navController.navigate("registration/${phoneNumber.value}")
+            }
         }
     }
 }
 
 @Composable
 fun localizeCheckAuthCodeErrorMessage(message: String): String {
-    if (message == "Not valid auth code") {
-        return stringResource(R.string.authorization_screen_check_auth_code_not_valid_error_message)
+    return if (message == "Not valid auth code") {
+        stringResource(R.string.authorization_screen_check_auth_code_not_valid_error_message)
     } else {
-        return message
+        message
     }
 }
 
@@ -275,5 +281,7 @@ fun AuthorizationScreenPreview() {
 
     val authViewModel = AuthViewModel(fakeAuthRepository)
 
-    AuthorizationScreen(authViewModel)
+    val navController = rememberNavController()
+
+    AuthorizationScreen(navController, authViewModel)
 }

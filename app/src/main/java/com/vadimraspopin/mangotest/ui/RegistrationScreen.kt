@@ -19,11 +19,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.vadimraspopin.mangotest.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(phoneNumber: String) {
+fun RegistrationScreen(navController: NavHostController, phoneNumber: String) {
     var name by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
 
@@ -100,5 +102,8 @@ fun RegistrationScreen(phoneNumber: String) {
 @Preview
 @Composable
 fun RegistrationScreenPreview() {
-    RegistrationScreen("+7 123 45-67")
+
+    val navController = rememberNavController()
+
+    RegistrationScreen(navController,"+7 123 45-67")
 }
