@@ -7,4 +7,8 @@
     <string name="authorization_screen_title">Вход в систему</string>
     <string name="authorization_screen_check_auth_code_not_valid_error_message">Неверный код авторизации</string>
     <string name="registration_screen_title">Регистрация</string>
+    <string name="registration_screen_phone_number_label">Номер телефона</string>
+    <string name="registration_screen_name_textfield_suggestion">Имя Фамилия</string>
+    <string name="registration_screen_username_textfield_suggestion">Никнейм</string>
+    <string name="registration_screen_register_button_label">Зарегистрироваться</string>
 </resources>
