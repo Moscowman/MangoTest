@@ -6,10 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -30,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -85,13 +87,17 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
             )
         }
     ) { paddingValues ->
+        val configuration = LocalConfiguration.current
+        val screenHeight = configuration.screenHeightDp.dp
+        val offsetY = screenHeight * 0.2f
 
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(24.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
+                .fillMaxSize()
+                .offset(y = offsetY),
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -124,7 +130,8 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                 placeholder = { Text("XXX XXX-XX-XX") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .widthIn(max = 488.dp)
             )
 
             if (sendAuthCodeState is ApiUiRequestState.Error) {
@@ -133,7 +140,9 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                     text = errorMessage,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp)
+                    modifier = Modifier
+                        .widthIn(max = 100.dp)
+                        .padding(top = 4.dp)
                 )
             }
 
@@ -147,7 +156,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                     authViewModel.sendAuthCode()
                 },
                 enabled = phoneNumber.value.filter { it -> isDigit(it) }.isNotEmpty(),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.widthIn(max = 320.dp),
                 shape = MaterialTheme.shapes.medium,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -191,7 +200,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                     label = { Text(stringResource(R.string.confirmation_code_textfield_suggestion)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.widthIn(max = 488.dp)
                 )
 
                 if (checkAuthCodeState is ApiUiRequestState.Error) {
@@ -213,7 +222,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                         authViewModel.checkAuthCode()
                     },
                     enabled = code.value.length == CODE_MAX_LENGTH,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.widthIn(max = 250.dp),
                     shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -232,8 +241,6 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                         .align(Alignment.CenterHorizontally)
                 )
             }
-
-
         }
     }
 }
