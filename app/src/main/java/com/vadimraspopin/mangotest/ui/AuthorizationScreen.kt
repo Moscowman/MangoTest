@@ -79,7 +79,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
         contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(stringResource(R.string.authorization_screen_label)) },
+                title = { Text(stringResource(R.string.authorization_screen_title)) },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
