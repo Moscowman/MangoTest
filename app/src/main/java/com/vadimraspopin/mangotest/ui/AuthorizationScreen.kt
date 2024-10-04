@@ -130,8 +130,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                 placeholder = { Text("XXX XXX-XX-XX") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 singleLine = true,
-                modifier = Modifier
-                    .widthIn(max = 488.dp)
+                modifier = Modifier.widthIn(max = 488.dp)
             )
 
             if (sendAuthCodeState is ApiUiRequestState.Error) {
@@ -140,9 +139,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                     text = errorMessage,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .widthIn(max = 100.dp)
-                        .padding(top = 4.dp)
+                    modifier = Modifier.padding(top = 4.dp)
                 )
             }
 
@@ -222,7 +219,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                         authViewModel.checkAuthCode()
                     },
                     enabled = code.value.length == CODE_MAX_LENGTH,
-                    modifier = Modifier.widthIn(max = 250.dp),
+                    modifier = Modifier.widthIn(max = 320.dp),
                     shape = MaterialTheme.shapes.medium,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
