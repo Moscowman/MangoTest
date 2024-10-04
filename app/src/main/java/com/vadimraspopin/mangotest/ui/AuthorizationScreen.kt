@@ -126,7 +126,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                     phoneNumber.value =
                         it.filter { char -> char.isDigit() || char == '-' || char == ' ' }
                 },
-                label = { Text(stringResource(R.string.phone_edit_label)) },
+                label = { Text(stringResource(R.string.authorization_screen_phone_edit_label)) },
                 placeholder = { Text("XXX XXX-XX-XX") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 singleLine = true,
@@ -160,7 +160,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             ) {
-                Text(stringResource(R.string.get_confirmation_code_button_label))
+                Text(stringResource(R.string.authorization_screen_get_confirmation_code_button_label))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -194,7 +194,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                             code.value = digitsOnly
                         }
                     },
-                    label = { Text(stringResource(R.string.confirmation_code_textfield_suggestion)) },
+                    label = { Text(stringResource(R.string.authorization_screen_confirmation_code_textfield_suggestion)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true,
                     modifier = Modifier.widthIn(max = 488.dp)
@@ -226,7 +226,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 ) {
-                    Text(stringResource(R.string.enter_system_button_label))
+                    Text(stringResource(R.string.authorization_screen_enter_system_button_label))
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -245,7 +245,7 @@ fun AuthorizationScreen(authViewModel: AuthViewModel = hiltViewModel()) {
 @Composable
 fun localizeCheckAuthCodeErrorMessage(message: String): String {
     if (message == "Not valid auth code") {
-        return stringResource(R.string.check_auth_code_not_valid_error_message)
+        return stringResource(R.string.authorization_screen_check_auth_code_not_valid_error_message)
     } else {
         return message
     }
