@@ -35,9 +35,6 @@ fun RegistrationScreen(
     phoneNumber: String,
     viewModel: RegistrationViewModel = hiltViewModel()
 ) {
-    var name by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-
     val registerState by viewModel.registerState.collectAsState()
 
     val context = LocalContext.current
@@ -74,17 +71,20 @@ fun RegistrationScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
+                value = viewModel.name.value,
+                onValueChange = { viewModel.name.value = it },
                 label = { Text(stringResource(R.string.registration_screen_name_textfield_suggestion)) },
                 modifier = Modifier.widthIn(max = 488.dp),
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(value = username,
+            OutlinedTextField(
+                value = viewModel.username.value,
                 onValueChange = {
-                    username = it
+                    val regex = Regex("[A-Za-z0-9\\-_]")
+                    val filteredInput = it.filter { regex.matches(it.toString()) }
+                    viewModel.username.value = filteredInput
                 },
                 label = { Text(stringResource(R.string.registration_screen_username_textfield_suggestion)) },
                 keyboardOptions = KeyboardOptions(
@@ -99,8 +99,12 @@ fun RegistrationScreen(
                 CircularProgressIndicator()
             } else {
                 Button(
+                    enabled = viewModel.name.value.isNotEmpty()
+                            && viewModel.username.value.isNotEmpty(),
                     onClick = {
-                        viewModel.register(phoneNumber, name, username)
+                        viewModel.register(
+                            phoneNumber
+                        )
                     },
                     modifier = Modifier.widthIn(max = 320.dp),
                 ) {
@@ -109,16 +113,25 @@ fun RegistrationScreen(
             }
         }
     }
+
+    val localizedErrorMessage = when (registerState) {
+        is ApiUiRequestState.Error -> {
+            localizeErrorMessage((registerState as ApiUiRequestState.Error).message)
+        }
+
+        else -> null
+    }
+
+    LaunchedEffect(localizedErrorMessage) {
+        localizedErrorMessage?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        }
+    }
+
     LaunchedEffect(registerState) {
         when (registerState) {
             is ApiUiRequestState.Success -> {
-
-            }
-
-            is ApiUiRequestState.Error -> {
-                val errorMessage =
-                    localizeErrorMessage((registerState as ApiUiRequestState.Error).message)
-                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+                //TODO
             }
 
             else -> Unit
@@ -126,9 +139,14 @@ fun RegistrationScreen(
     }
 }
 
-private fun localizeErrorMessage(errorMessage: String): String {
-    return errorMessage
-}
+@Composable
+private fun localizeErrorMessage(errorMessage: String): String =
+    when (errorMessage) {
+        "User with this username already exists" -> stringResource(R.string.registration_screen_username_already_exists_error_message)
+        "User with this phone already exists" -> stringResource(R.string.registration_screen_phone_already_exists_error_message)
+        else -> errorMessage
+    }
+
 
 @Preview
 @Composable

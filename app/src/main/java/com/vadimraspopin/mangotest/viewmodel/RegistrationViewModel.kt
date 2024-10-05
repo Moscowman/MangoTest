@@ -1,5 +1,6 @@
 package com.vadimraspopin.mangotest.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vadimraspopin.mangotest.api.ValidationException
@@ -17,15 +18,19 @@ import javax.inject.Inject
 @HiltViewModel
 class RegistrationViewModel @Inject constructor(private val userRepository: AuthRepository) : ViewModel() {
 
+    var name = mutableStateOf("")
+
+    var username = mutableStateOf("")
+
     private val _registerState =
         MutableStateFlow<ApiUiRequestState<RegisterResponse>>(ApiUiRequestState.Idle)
 
     val registerState: StateFlow<ApiUiRequestState<RegisterResponse>> = _registerState
 
-    fun register(phone: String, name: String, username: String) {
+    fun register(phone: String) {
         viewModelScope.launch {
             _registerState.value = ApiUiRequestState.Loading
-            userRepository.registerUser(phone, name, username)
+            userRepository.registerUser(phone, name.value, username.value)
                 .onStart {
                     _registerState.value = ApiUiRequestState.Loading
                 }

@@ -11,4 +11,6 @@
     <string name="registration_screen_name_textfield_suggestion">Имя Фамилия</string>
     <string name="registration_screen_username_textfield_suggestion">Никнейм</string>
     <string name="registration_screen_register_button_label">Зарегистрироваться</string>
+    <string name="registration_screen_username_already_exists_error_message">Пользователь с таким никнеймом уже существует</string>
+    <string name="registration_screen_phone_already_exists_error_message">Пользователь с таким номером телефона уже существует</string>
 </resources>
