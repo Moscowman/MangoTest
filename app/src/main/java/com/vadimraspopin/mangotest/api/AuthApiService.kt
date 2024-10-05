@@ -11,4 +11,7 @@ interface AuthApiService {
 
     @POST("/api/v1/users/check-auth-code/")
     suspend fun checkAuthCode(@Body request: CheckAuthCodeRequest): Response<CheckAuthCodeResponseDto>
+
+    @POST("/api/v1/users/register/")
+    suspend fun register(@Body request: RegisterRequest): Response<RegisterResponseDto>
 }

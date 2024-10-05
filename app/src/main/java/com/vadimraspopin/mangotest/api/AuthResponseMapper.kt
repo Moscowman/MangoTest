@@ -1,6 +1,7 @@
 package com.vadimraspopin.mangotest.api
 
 import com.vadimraspopin.mangotest.model.CheckAuthCodeResponse
+import com.vadimraspopin.mangotest.model.RegisterResponse
 import com.vadimraspopin.mangotest.model.SendAuthCodeResponse
 
 fun CheckAuthCodeResponseDto.toDomainModel(): CheckAuthCodeResponse {
@@ -15,5 +16,13 @@ fun CheckAuthCodeResponseDto.toDomainModel(): CheckAuthCodeResponse {
 fun SendAuthCodeResponseDto.toDomainModel(): SendAuthCodeResponse {
     return SendAuthCodeResponse(
         isSuccess = this.isSuccess
+    )
+}
+
+fun RegisterResponseDto.toDomainModel(): RegisterResponse {
+    return RegisterResponse(
+        refreshToken = this.refreshToken,
+        accessToken = this.accessToken,
+        userId = this.userId
     )
 }

@@ -1,5 +1,6 @@
 package com.vadimraspopin.mangotest.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -15,21 +16,31 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.vadimraspopin.mangotest.R
+import com.vadimraspopin.mangotest.repository.FakeAuthRepository
+import com.vadimraspopin.mangotest.viewmodel.RegistrationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(navController: NavHostController, phoneNumber: String) {
+fun RegistrationScreen(
+    navController: NavHostController,
+    phoneNumber: String,
+    viewModel: RegistrationViewModel = hiltViewModel()
+) {
     var name by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
 
-    var isLoading by remember { mutableStateOf(false) }
+    val registerState by viewModel.registerState.collectAsState()
+
+    val context = LocalContext.current
 
     Scaffold(modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
@@ -71,8 +82,7 @@ fun RegistrationScreen(navController: NavHostController, phoneNumber: String) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
-                value = username,
+            OutlinedTextField(value = username,
                 onValueChange = {
                     username = it
                 },
@@ -85,11 +95,13 @@ fun RegistrationScreen(navController: NavHostController, phoneNumber: String) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (isLoading) {
+            if (registerState is ApiUiRequestState.Loading) {
                 CircularProgressIndicator()
             } else {
                 Button(
-                    onClick = {},
+                    onClick = {
+                        viewModel.register(phoneNumber, name, username)
+                    },
                     modifier = Modifier.widthIn(max = 320.dp),
                 ) {
                     Text(stringResource(R.string.registration_screen_register_button_label))
@@ -97,13 +109,36 @@ fun RegistrationScreen(navController: NavHostController, phoneNumber: String) {
             }
         }
     }
+    LaunchedEffect(registerState) {
+        when (registerState) {
+            is ApiUiRequestState.Success -> {
+
+            }
+
+            is ApiUiRequestState.Error -> {
+                val errorMessage =
+                    localizeErrorMessage((registerState as ApiUiRequestState.Error).message)
+                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+            }
+
+            else -> Unit
+        }
+    }
+}
+
+private fun localizeErrorMessage(errorMessage: String): String {
+    return errorMessage
 }
 
 @Preview
 @Composable
 fun RegistrationScreenPreview() {
 
+    val fakeAuthRepository = FakeAuthRepository()
+
     val navController = rememberNavController()
 
-    RegistrationScreen(navController,"+7 123 45-67")
+    val registrationViewModel = RegistrationViewModel(fakeAuthRepository)
+
+    RegistrationScreen(navController, "+7 925 123-45-67", registrationViewModel)
 }

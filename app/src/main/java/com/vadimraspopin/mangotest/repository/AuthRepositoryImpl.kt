@@ -3,6 +3,7 @@ package com.vadimraspopin.mangotest.repository
 import com.vadimraspopin.mangotest.api.toDomainModel
 import com.vadimraspopin.mangotest.datasource.AuthRemoteDataSource
 import com.vadimraspopin.mangotest.model.CheckAuthCodeResponse
+import com.vadimraspopin.mangotest.model.RegisterResponse
 import com.vadimraspopin.mangotest.model.SendAuthCodeResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -21,4 +22,13 @@ class AuthRepositoryImpl @Inject constructor(private val remoteDataSource: AuthR
             .map { responseDto ->
                 responseDto.toDomainModel()
             }
+
+    override fun registerUser(phone: String, name: String, username: String) :
+            Flow<RegisterResponse> {
+        val response = remoteDataSource.register(phone, name, username)
+            .map { registerDto ->
+                registerDto.toDomainModel()
+            }
+        return response
+    }
 }

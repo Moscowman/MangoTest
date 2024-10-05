@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vadimraspopin.mangotest.api.ValidationException
 import com.vadimraspopin.mangotest.model.CheckAuthCodeResponse
+import com.vadimraspopin.mangotest.model.SendAuthCodeResponse
 import com.vadimraspopin.mangotest.repository.AuthRepository
 import com.vadimraspopin.mangotest.ui.ApiUiRequestState
-import com.vadimraspopin.mangotest.model.SendAuthCodeResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
