@@ -147,8 +147,7 @@ fun AuthorizationScreen(navController: NavHostController, authViewModel: AuthVie
             Button(
                 onClick = {
                     keyboardController?.hide()
-                    val fullPhoneNumber = countryCodePickerState.getFullPhoneNumber()
-                    authViewModel.fullPhoneNumber = fullPhoneNumber
+                    authViewModel.fullPhoneNumber = countryCodePickerState.getFullPhoneNumber()
                     authViewModel.sendAuthCode()
                 },
                 enabled = phoneNumber.value.filter { it -> isDigit(it) }.isNotEmpty(),
@@ -240,7 +239,8 @@ fun AuthorizationScreen(navController: NavHostController, authViewModel: AuthVie
 
             LaunchedEffect(checkAuthCodeState) {
                 if (checkAuthCodeState is ApiUiRequestState.Success) {
-                    navController.navigate("registration/${phoneNumber.value}")
+                    authViewModel.fullPhoneNumber = countryCodePickerState.getFullPhoneNumber()
+                    navController.navigate("registration/${authViewModel.fullPhoneNumber}")
                     authViewModel.resetAuthCode()
                 }
             }
