@@ -43,7 +43,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.joelkanyi.jcomposecountrycodepicker.component.KomposeCountryCodePicker
 import com.joelkanyi.jcomposecountrycodepicker.component.rememberKomposeCountryCodePickerState
-import com.vadimraspopin.mangotest.AuthViewModel
+import com.vadimraspopin.mangotest.viewmodel.AuthViewModel
 import com.vadimraspopin.mangotest.R
 import com.vadimraspopin.mangotest.model.CheckAuthCodeResponse
 import com.vadimraspopin.mangotest.model.SendAuthCodeResponse

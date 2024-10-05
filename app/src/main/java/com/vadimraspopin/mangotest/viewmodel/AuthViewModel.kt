@@ -1,4 +1,4 @@
-package com.vadimraspopin.mangotest
+package com.vadimraspopin.mangotest.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
