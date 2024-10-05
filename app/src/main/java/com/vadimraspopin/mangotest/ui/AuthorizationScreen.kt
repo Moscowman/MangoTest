@@ -26,6 +26,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -43,13 +44,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.joelkanyi.jcomposecountrycodepicker.component.KomposeCountryCodePicker
 import com.joelkanyi.jcomposecountrycodepicker.component.rememberKomposeCountryCodePickerState
-import com.vadimraspopin.mangotest.viewmodel.AuthViewModel
 import com.vadimraspopin.mangotest.R
-import com.vadimraspopin.mangotest.model.CheckAuthCodeResponse
-import com.vadimraspopin.mangotest.model.SendAuthCodeResponse
-import com.vadimraspopin.mangotest.repository.AuthRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.vadimraspopin.mangotest.repository.FakeAuthRepository
+import com.vadimraspopin.mangotest.viewmodel.AuthViewModel
 import java.lang.Character.isDigit
 
 const val CODE_MAX_LENGTH = 6
@@ -241,9 +238,11 @@ fun AuthorizationScreen(navController: NavHostController, authViewModel: AuthVie
                 )
             }
 
-            if (checkAuthCodeState is ApiUiRequestState.Success) {
-                navController.navigate("registration/${phoneNumber.value}")
-                authViewModel.resetAuthCode()
+            LaunchedEffect(checkAuthCodeState) {
+                if (checkAuthCodeState is ApiUiRequestState.Success) {
+                    navController.navigate("registration/${phoneNumber.value}")
+                    authViewModel.resetAuthCode()
+                }
             }
         }
     }
@@ -261,24 +260,7 @@ fun localizeCheckAuthCodeErrorMessage(message: String): String {
 @Preview(showBackground = true)
 @Composable
 fun AuthorizationScreenPreview() {
-    val fakeAuthRepository = object : AuthRepository {
-        override fun sendAuthCode(phone: String): Flow<SendAuthCodeResponse> {
-            return TODO()
-        }
-
-        override fun checkAuthCode(phone: String, code: String): Flow<CheckAuthCodeResponse> {
-            return flow {
-                emit(
-                    CheckAuthCodeResponse(
-                        refreshToken = "",
-                        accessToken = "",
-                        userId = 0,
-                        isUserExists = false
-                    )
-                )
-            }
-        }
-    }
+    val fakeAuthRepository = FakeAuthRepository()
 
     val authViewModel = AuthViewModel(fakeAuthRepository)
 
