@@ -81,4 +81,10 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                 }
         }
     }
+
+    fun resetAuthCode() {
+        _sendAuthCodeState.value = ApiUiRequestState.Idle
+        _checkAuthCodeState.value = ApiUiRequestState.Idle
+        code.value = ""
+    }
 }

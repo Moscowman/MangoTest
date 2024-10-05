@@ -243,6 +243,7 @@ fun AuthorizationScreen(navController: NavHostController, authViewModel: AuthVie
 
             if (checkAuthCodeState is ApiUiRequestState.Success) {
                 navController.navigate("registration/${phoneNumber.value}")
+                authViewModel.resetAuthCode()
             }
         }
     }
