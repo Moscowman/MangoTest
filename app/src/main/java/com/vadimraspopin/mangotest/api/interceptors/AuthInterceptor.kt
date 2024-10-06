@@ -1,5 +1,6 @@
-package com.vadimraspopin.mangotest.api
+package com.vadimraspopin.mangotest.api.interceptors
 
+import com.vadimraspopin.mangotest.api.providers.TokenProvider
 import okhttp3.Interceptor
 import okhttp3.Response
 

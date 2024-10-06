@@ -1,5 +1,13 @@
-package com.vadimraspopin.mangotest.api
+package com.vadimraspopin.mangotest.api.services
 
+import com.vadimraspopin.mangotest.api.requests.CheckAuthCodeRequest
+import com.vadimraspopin.mangotest.api.responses.CheckAuthCodeResponseDto
+import com.vadimraspopin.mangotest.api.requests.RefreshTokenRequest
+import com.vadimraspopin.mangotest.api.responses.RefreshTokenResponseDto
+import com.vadimraspopin.mangotest.api.requests.RegisterRequest
+import com.vadimraspopin.mangotest.api.responses.RegisterResponseDto
+import com.vadimraspopin.mangotest.api.requests.SendAuthCodeRequest
+import com.vadimraspopin.mangotest.api.responses.SendAuthCodeResponseDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

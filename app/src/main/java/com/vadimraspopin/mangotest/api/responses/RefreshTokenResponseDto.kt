@@ -1,4 +1,4 @@
-package com.vadimraspopin.mangotest.api
+package com.vadimraspopin.mangotest.api.responses
 
 import com.google.gson.annotations.SerializedName
 

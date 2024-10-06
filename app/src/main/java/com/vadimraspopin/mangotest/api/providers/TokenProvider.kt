@@ -1,4 +1,4 @@
-package com.vadimraspopin.mangotest.api
+package com.vadimraspopin.mangotest.api.providers
 
 interface TokenProvider {
     fun getAccessToken(): String?

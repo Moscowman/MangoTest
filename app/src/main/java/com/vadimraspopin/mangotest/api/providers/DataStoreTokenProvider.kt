@@ -1,4 +1,4 @@
-package com.vadimraspopin.mangotest.api
+package com.vadimraspopin.mangotest.api.providers
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
@@ -14,7 +14,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DataStoreTokenProvider @Inject constructor(@ApplicationContext private val context: Context) : TokenProvider {
+class DataStoreTokenProvider @Inject constructor(@ApplicationContext private val context: Context) :
+    TokenProvider {
 
     companion object {
         private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")

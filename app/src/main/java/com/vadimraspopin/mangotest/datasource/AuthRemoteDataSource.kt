@@ -1,8 +1,8 @@
 package com.vadimraspopin.mangotest.datasource
 
-import com.vadimraspopin.mangotest.api.CheckAuthCodeResponseDto
-import com.vadimraspopin.mangotest.api.RegisterResponseDto
-import com.vadimraspopin.mangotest.api.SendAuthCodeResponseDto
+import com.vadimraspopin.mangotest.api.responses.CheckAuthCodeResponseDto
+import com.vadimraspopin.mangotest.api.responses.RegisterResponseDto
+import com.vadimraspopin.mangotest.api.responses.SendAuthCodeResponseDto
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRemoteDataSource {

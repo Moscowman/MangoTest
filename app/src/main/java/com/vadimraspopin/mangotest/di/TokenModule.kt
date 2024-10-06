@@ -1,7 +1,7 @@
 package com.vadimraspopin.mangotest.di
 
-import com.vadimraspopin.mangotest.api.DataStoreTokenProvider
-import com.vadimraspopin.mangotest.api.TokenProvider
+import com.vadimraspopin.mangotest.api.providers.DataStoreTokenProvider
+import com.vadimraspopin.mangotest.api.providers.TokenProvider
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

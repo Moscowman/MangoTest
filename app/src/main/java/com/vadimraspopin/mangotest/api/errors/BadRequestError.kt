@@ -1,4 +1,4 @@
-package com.vadimraspopin.mangotest.api
+package com.vadimraspopin.mangotest.api.errors
 
 data class BadRequestResponse(
     val detail: BadRequestDetail

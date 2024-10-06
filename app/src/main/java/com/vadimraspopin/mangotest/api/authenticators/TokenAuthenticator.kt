@@ -1,5 +1,8 @@
-package com.vadimraspopin.mangotest.api
+package com.vadimraspopin.mangotest.api.authenticators
 
+import com.vadimraspopin.mangotest.api.providers.TokenProvider
+import com.vadimraspopin.mangotest.api.requests.RefreshTokenRequest
+import com.vadimraspopin.mangotest.api.services.AuthApiService
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request

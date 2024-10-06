@@ -3,8 +3,8 @@ package com.vadimraspopin.mangotest.viewmodel
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vadimraspopin.mangotest.api.BadRequestException
-import com.vadimraspopin.mangotest.api.ValidationException
+import com.vadimraspopin.mangotest.api.errors.BadRequestException
+import com.vadimraspopin.mangotest.api.errors.ValidationException
 import com.vadimraspopin.mangotest.model.RegisterResponse
 import com.vadimraspopin.mangotest.repository.AuthRepository
 import com.vadimraspopin.mangotest.ui.ApiUiRequestState

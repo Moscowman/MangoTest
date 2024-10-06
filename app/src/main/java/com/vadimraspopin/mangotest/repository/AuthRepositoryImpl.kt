@@ -1,6 +1,6 @@
 package com.vadimraspopin.mangotest.repository
 
-import com.vadimraspopin.mangotest.api.toDomainModel
+import com.vadimraspopin.mangotest.api.mappers.toDomainModel
 import com.vadimraspopin.mangotest.datasource.AuthRemoteDataSource
 import com.vadimraspopin.mangotest.model.CheckAuthCodeResponse
 import com.vadimraspopin.mangotest.model.RegisterResponse

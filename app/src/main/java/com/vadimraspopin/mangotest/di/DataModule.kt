@@ -1,10 +1,10 @@
 package com.vadimraspopin.mangotest.di
 
-import com.vadimraspopin.mangotest.api.AuthApiService
-import com.vadimraspopin.mangotest.api.AuthInterceptor
-import com.vadimraspopin.mangotest.api.ProfileApiService
-import com.vadimraspopin.mangotest.api.TokenAuthenticator
-import com.vadimraspopin.mangotest.api.TokenProvider
+import com.vadimraspopin.mangotest.api.services.AuthApiService
+import com.vadimraspopin.mangotest.api.interceptors.AuthInterceptor
+import com.vadimraspopin.mangotest.api.services.ProfileApiService
+import com.vadimraspopin.mangotest.api.authenticators.TokenAuthenticator
+import com.vadimraspopin.mangotest.api.providers.TokenProvider
 import com.vadimraspopin.mangotest.datasource.AuthRemoteDataSource
 import com.vadimraspopin.mangotest.datasource.AuthRemoteDataSourceImpl
 import com.vadimraspopin.mangotest.repository.AuthRepository

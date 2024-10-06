@@ -1,19 +1,19 @@
 package com.vadimraspopin.mangotest.datasource
 
 import com.google.gson.Gson
-import com.vadimraspopin.mangotest.api.AuthApiService
-import com.vadimraspopin.mangotest.api.BadRequestException
-import com.vadimraspopin.mangotest.api.BadRequestResponse
-import com.vadimraspopin.mangotest.api.CheckAuthCodeRequest
+import com.vadimraspopin.mangotest.api.services.AuthApiService
+import com.vadimraspopin.mangotest.api.errors.BadRequestException
+import com.vadimraspopin.mangotest.api.errors.BadRequestResponse
+import com.vadimraspopin.mangotest.api.requests.CheckAuthCodeRequest
 import com.vadimraspopin.mangotest.api.CheckAuthCodeResponseDto
-import com.vadimraspopin.mangotest.api.NotFoundErrorResponse
-import com.vadimraspopin.mangotest.api.NotFoundException
-import com.vadimraspopin.mangotest.api.RegisterRequest
+import com.vadimraspopin.mangotest.api.errors.NotFoundErrorResponse
+import com.vadimraspopin.mangotest.api.errors.NotFoundException
+import com.vadimraspopin.mangotest.api.requests.RegisterRequest
 import com.vadimraspopin.mangotest.api.RegisterResponseDto
-import com.vadimraspopin.mangotest.api.SendAuthCodeRequest
+import com.vadimraspopin.mangotest.api.requests.SendAuthCodeRequest
 import com.vadimraspopin.mangotest.api.SendAuthCodeResponseDto
-import com.vadimraspopin.mangotest.api.ValidationErrorResponse
-import com.vadimraspopin.mangotest.api.ValidationException
+import com.vadimraspopin.mangotest.api.errors.ValidationErrorResponse
+import com.vadimraspopin.mangotest.api.errors.ValidationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

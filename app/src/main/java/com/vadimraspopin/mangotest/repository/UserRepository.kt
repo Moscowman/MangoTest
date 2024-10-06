@@ -1,6 +1,6 @@
 package com.vadimraspopin.mangotest.repository
 
-import com.vadimraspopin.mangotest.api.ProfileApiService
+import com.vadimraspopin.mangotest.api.services.ProfileApiService
 import com.vadimraspopin.mangotest.datasource.UserPreferences
 import com.vadimraspopin.mangotest.model.User
 import kotlinx.coroutines.flow.Flow
