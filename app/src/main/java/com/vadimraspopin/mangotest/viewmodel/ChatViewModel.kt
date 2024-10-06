@@ -2,8 +2,11 @@ package com.vadimraspopin.mangotest.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.vadimraspopin.mangotest.model.Message
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ChatViewModel : ViewModel() {
+@HiltViewModel
+class ChatViewModel @Inject constructor() : ViewModel() {
     val messages = listOf(
         Message(1, "Привет!", false),
         Message(2, "Как дела?", false),

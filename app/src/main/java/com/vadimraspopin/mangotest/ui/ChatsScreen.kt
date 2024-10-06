@@ -12,12 +12,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.vadimraspopin.mangotest.model.Chat
 import com.vadimraspopin.mangotest.viewmodel.ChatsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatsScreen(viewModel: ChatsViewModel = ChatsViewModel(), onChatClicked: (Int) -> Unit = {}) {
+fun ChatsScreen(viewModel: ChatsViewModel = hiltViewModel(), onChatClicked: (Int) -> Unit = {}) {
     val chats = viewModel.chats
 
     Scaffold(

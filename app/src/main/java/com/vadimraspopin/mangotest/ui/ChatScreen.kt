@@ -30,12 +30,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.vadimraspopin.mangotest.model.Message
 import com.vadimraspopin.mangotest.viewmodel.ChatViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(viewModel: ChatViewModel = ChatViewModel()) {
+fun ChatScreen(viewModel: ChatViewModel = hiltViewModel()) {
     val messages = viewModel.messages
     var messageText by remember { mutableStateOf("") }
 
