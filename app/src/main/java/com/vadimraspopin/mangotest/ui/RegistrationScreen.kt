@@ -136,7 +136,11 @@ fun RegistrationScreen(
     LaunchedEffect(registerState) {
         when (registerState) {
             is ApiUiRequestState.Success -> {
-                //TODO
+                navController.navigate(Routes.CHATS) {
+                    popUpTo(Routes.AUTHORIZATION) {
+                        inclusive = true
+                    }
+                }
             }
 
             else -> Unit
