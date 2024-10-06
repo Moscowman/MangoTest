@@ -3,6 +3,7 @@ package com.vadimraspopin.mangotest.viewmodel
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vadimraspopin.mangotest.api.BadRequestException
 import com.vadimraspopin.mangotest.api.ValidationException
 import com.vadimraspopin.mangotest.model.RegisterResponse
 import com.vadimraspopin.mangotest.repository.AuthRepository
@@ -38,11 +39,19 @@ class RegistrationViewModel @Inject constructor(private val userRepository: Auth
                     when (e) {
                         is ValidationException ->
                             _registerState.value =
-                                ApiUiRequestState.Error(e.error.detail.message)
+                                ApiUiRequestState.Error(
+                                    e.error.detail.map { it.msg }
+                                )
+
+                        is BadRequestException ->
+                            _registerState.value =
+                                ApiUiRequestState.Error(
+                                    listOf(e.error.detail.message)
+                                )
 
                         else ->
                             _registerState.value =
-                                ApiUiRequestState.Error(e.message ?: "Unknown error")
+                                ApiUiRequestState.Error(listOf(e.message ?: "Unknown error"))
                     }
                 }
                 .collect { value ->

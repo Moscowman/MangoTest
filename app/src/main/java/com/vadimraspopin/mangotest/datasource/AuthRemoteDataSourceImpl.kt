@@ -2,8 +2,12 @@ package com.vadimraspopin.mangotest.datasource
 
 import com.google.gson.Gson
 import com.vadimraspopin.mangotest.api.AuthApiService
+import com.vadimraspopin.mangotest.api.BadRequestException
+import com.vadimraspopin.mangotest.api.BadRequestResponse
 import com.vadimraspopin.mangotest.api.CheckAuthCodeRequest
 import com.vadimraspopin.mangotest.api.CheckAuthCodeResponseDto
+import com.vadimraspopin.mangotest.api.NotFoundErrorResponse
+import com.vadimraspopin.mangotest.api.NotFoundException
 import com.vadimraspopin.mangotest.api.RegisterRequest
 import com.vadimraspopin.mangotest.api.RegisterResponseDto
 import com.vadimraspopin.mangotest.api.SendAuthCodeRequest
@@ -24,24 +28,44 @@ class AuthRemoteDataSourceImpl(private val apiService: AuthApiService) : AuthRem
                 emit(body)
             } ?: throw Exception("Пустое тело ответа")
         } else {
-            val errorBody = response.errorBody()?.string()
-            val validationError = gson.fromJson(errorBody, ValidationErrorResponse::class.java)
-            throw ValidationException(validationError)
+            when (response.code()) {
+                422 -> {
+                    val errorBody = response.errorBody()?.string()
+                    val validationError =
+                        gson.fromJson(errorBody, ValidationErrorResponse::class.java)
+                    throw ValidationException(validationError)
+                }
+            }
         }
     }
 
-    override fun checkAuthCode(phone: String, code: String): Flow<CheckAuthCodeResponseDto> = flow {
-        val response = apiService.checkAuthCode(CheckAuthCodeRequest(phone, code))
-        if (response.isSuccessful) {
-            response.body()?.let { body ->
-                emit(body)
-            } ?: throw Exception("Пустое тело ответа")
-        } else {
-            val errorBody = response.errorBody()?.string()
-            val validationError = gson.fromJson(errorBody, ValidationErrorResponse::class.java)
-            throw ValidationException(validationError)
+    override fun checkAuthCode(phone: String, code: String): Flow<CheckAuthCodeResponseDto> =
+        flow {
+            val response = apiService.checkAuthCode(CheckAuthCodeRequest(phone, code))
+            if (response.isSuccessful) {
+                response.body()?.let { body ->
+                    emit(body)
+                } ?: throw Exception("Пустое тело ответа")
+            } else {
+                when (response.code()) {
+                    404 -> {
+                        val errorBody = response.errorBody()?.string()
+                        val validationError =
+                            gson.fromJson(errorBody, NotFoundErrorResponse::class.java)
+
+                        throw NotFoundException(validationError)
+                    }
+
+                    422 -> {
+                        val errorBody = response.errorBody()?.string()
+                        val validationError =
+                            gson.fromJson(errorBody, ValidationErrorResponse::class.java)
+
+                        throw ValidationException(validationError)
+                    }
+                }
+            }
         }
-    }
 
     override fun register(
         phone: String,
@@ -54,9 +78,20 @@ class AuthRemoteDataSourceImpl(private val apiService: AuthApiService) : AuthRem
                 emit(body)
             } ?: throw Exception("Пустое тело ответа")
         } else {
-            val errorBody = response.errorBody()?.string()
-            val validationError = gson.fromJson(errorBody, ValidationErrorResponse::class.java)
-            throw ValidationException(validationError)
+            when (response.code()) {
+                400 -> {
+                    val errorBody = response.errorBody()?.string()
+                    val validationError =
+                        gson.fromJson(errorBody, BadRequestResponse::class.java)
+                    throw BadRequestException(validationError)
+                }
+                422 -> {
+                   val errorBody = response.errorBody()?.string()
+                    val validationError =
+                        gson.fromJson(errorBody, ValidationErrorResponse::class.java)
+                    throw ValidationException(validationError)
+                }
+            }
         }
     }
 }

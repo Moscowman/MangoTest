@@ -86,7 +86,9 @@ fun RegistrationScreen(
                     val filteredInput = it.filter { regex.matches(it.toString()) }
                     viewModel.username.value = filteredInput
                 },
-                label = { Text(stringResource(R.string.registration_screen_username_textfield_suggestion)) },
+                label = { Text(stringResource(
+                    R.string.registration_screen_username_textfield_suggestion
+                )) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Ascii
                 ),
@@ -116,7 +118,10 @@ fun RegistrationScreen(
 
     val localizedErrorMessage = when (registerState) {
         is ApiUiRequestState.Error -> {
-            localizeErrorMessage((registerState as ApiUiRequestState.Error).message)
+            val localizedMessages = (registerState as ApiUiRequestState.Error)
+                .messages.map { localizeErrorMessage(it) }
+
+            localizedMessages.joinToString(separator = "\n")
         }
 
         else -> null
@@ -142,8 +147,15 @@ fun RegistrationScreen(
 @Composable
 private fun localizeErrorMessage(errorMessage: String): String =
     when (errorMessage) {
-        "User with this username already exists" -> stringResource(R.string.registration_screen_username_already_exists_error_message)
-        "User with this phone already exists" -> stringResource(R.string.registration_screen_phone_already_exists_error_message)
+        "User with this username already exists" -> stringResource(
+            R.string.registration_screen_username_already_exists_error_message
+        )
+        "User with this phone already exists" -> stringResource(
+            R.string.registration_screen_phone_already_exists_error_message
+        )
+        "ensure this value has at least 5 characters" -> stringResource(
+            R.string.registration_screen_five_characters_error_message
+        )
         else -> errorMessage
     }
 

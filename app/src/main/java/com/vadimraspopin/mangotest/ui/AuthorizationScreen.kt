@@ -133,9 +133,12 @@ fun AuthorizationScreen(navController: NavHostController, authViewModel: AuthVie
             )
 
             if (sendAuthCodeState is ApiUiRequestState.Error) {
-                val errorMessage = (sendAuthCodeState as ApiUiRequestState.Error).message
+                val localizedMessages = (sendAuthCodeState as ApiUiRequestState.Error)
+                    .messages.map { localizeCheckAuthCodeErrorMessage(it) }
+
+                val displayMessage = localizedMessages.joinToString(separator = "\n")
                 Text(
-                    text = errorMessage,
+                    text = displayMessage,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(top = 4.dp)
@@ -199,9 +202,11 @@ fun AuthorizationScreen(navController: NavHostController, authViewModel: AuthVie
                 )
 
                 if (checkAuthCodeState is ApiUiRequestState.Error) {
-                    val errorMessage = (checkAuthCodeState as ApiUiRequestState.Error).message
+                    val localizedMessages = (checkAuthCodeState as ApiUiRequestState.Error)
+                        .messages.map { localizeCheckAuthCodeErrorMessage(it) }
+                    val displayMessage = localizedMessages.joinToString(separator = "\n")
                     Text(
-                        text = localizeCheckAuthCodeErrorMessage(errorMessage),
+                        text = localizeCheckAuthCodeErrorMessage(displayMessage),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 4.dp)

@@ -3,6 +3,7 @@ package com.vadimraspopin.mangotest.viewmodel
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vadimraspopin.mangotest.api.NotFoundException
 import com.vadimraspopin.mangotest.api.ValidationException
 import com.vadimraspopin.mangotest.model.CheckAuthCodeResponse
 import com.vadimraspopin.mangotest.model.SendAuthCodeResponse
@@ -45,11 +46,13 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                     when (e) {
                         is ValidationException ->
                             _sendAuthCodeState.value =
-                                ApiUiRequestState.Error(e.error.detail.message)
+                                ApiUiRequestState.Error(
+                                    e.error.detail.map { it.msg }
+                                )
 
                         else ->
                             _sendAuthCodeState.value =
-                                ApiUiRequestState.Error(e.message ?: "Unknown error")
+                                ApiUiRequestState.Error(listOf(e.message ?: "Unknown error"))
                     }
                 }
                 .collect { value ->
@@ -69,11 +72,19 @@ class AuthViewModel @Inject constructor(val authRepository: AuthRepository) : Vi
                     when (e) {
                         is ValidationException ->
                             _checkAuthCodeState.value =
-                                ApiUiRequestState.Error(e.error.detail.message)
+                                ApiUiRequestState.Error(
+                                    e.error.detail.map { it.msg }
+                                )
+
+                        is NotFoundException ->
+                            _checkAuthCodeState.value =
+                                ApiUiRequestState.Error(
+                                    listOf(e.error.detail.message)
+                                )
 
                         else ->
                             _checkAuthCodeState.value =
-                                ApiUiRequestState.Error(e.message ?: "Unknown error")
+                                ApiUiRequestState.Error(listOf(e.message ?: "Unknown error"))
                     }
                 }
                 .collect { response ->
