@@ -2,6 +2,7 @@ package com.vadimraspopin.mangotest.di
 
 import com.vadimraspopin.mangotest.api.AuthApiService
 import com.vadimraspopin.mangotest.api.AuthInterceptor
+import com.vadimraspopin.mangotest.api.ProfileApiService
 import com.vadimraspopin.mangotest.api.TokenAuthenticator
 import com.vadimraspopin.mangotest.api.TokenProvider
 import com.vadimraspopin.mangotest.datasource.AuthRemoteDataSource
@@ -39,7 +40,7 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideApiService(tokenProvider: TokenProvider): AuthApiService {
+    fun provideApiService(tokenProvider: TokenProvider): Retrofit {
 
         val authApi = Retrofit.Builder()
             .baseUrl(BASE_API_URL)
@@ -58,6 +59,18 @@ object DataModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
+        return retrofit
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthApi(retrofit: Retrofit): AuthApiService {
         return retrofit.create(AuthApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfileApiService(retrofit: Retrofit): ProfileApiService {
+        return retrofit.create(ProfileApiService::class.java)
     }
 }

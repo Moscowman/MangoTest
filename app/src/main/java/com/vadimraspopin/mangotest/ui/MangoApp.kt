@@ -12,6 +12,7 @@ object Routes {
     const val REGISTRATION = "registration/{phoneNumber}"
     const val CHATS = "chats"
     const val CHAT = "chat/{chatId}"
+    const val PROFILE = "profile"
 }
 
 @Composable
@@ -27,15 +28,22 @@ fun MangoApp() {
             RegistrationScreen(navController, phoneNumber = phoneNumber)
         }
         composable(Routes.CHATS) {
-            ChatsScreen(onChatClicked = { chatId ->
-                navController.navigate("chat/$chatId")
-            })
+            ChatsScreen(
+                onChatClicked = { chatId ->
+                    navController.navigate("chat/$chatId")
+                },
+                onProfileClicked = {
+                    navController.navigate(Routes.PROFILE)
+                })
         }
         composable(
             route = Routes.CHAT,
             arguments = listOf(navArgument("chatId") { type = NavType.IntType })
         ) {
             ChatScreen()
+        }
+        composable(Routes.PROFILE) {
+            ProfileScreen()
         }
     }
 }
