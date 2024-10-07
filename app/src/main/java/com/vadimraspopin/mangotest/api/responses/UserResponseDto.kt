@@ -1,6 +1,6 @@
-package com.vadimraspopin.mangotest.model
+package com.vadimraspopin.mangotest.api.responses
 
-data class User(
+data class UserResponseDto(
     val name: String,
     val username: String,
     val birthday: String,
@@ -8,16 +8,17 @@ data class User(
     val vk: String,
     val instagram: String,
     val status: String,
+    val avatar: String,
     val id: Int,
     val last: String,
     val online: Boolean,
     val created: String,
     val phone: String,
     val completedTask: String,
-    val avatars: UserAvatars
+    val avatars: UserResponseDtoAvatars
 )
 
-data class UserAvatars (
+data class UserResponseDtoAvatars (
     val avatar: String,
     val bigAvatar: String,
     val miniAvatar: String

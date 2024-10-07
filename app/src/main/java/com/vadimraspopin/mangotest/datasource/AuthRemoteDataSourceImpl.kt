@@ -1,25 +1,28 @@
 package com.vadimraspopin.mangotest.datasource
 
 import com.google.gson.Gson
-import com.vadimraspopin.mangotest.api.services.AuthApiService
 import com.vadimraspopin.mangotest.api.errors.BadRequestException
 import com.vadimraspopin.mangotest.api.errors.BadRequestResponse
-import com.vadimraspopin.mangotest.api.requests.CheckAuthCodeRequest
-import com.vadimraspopin.mangotest.api.responses.CheckAuthCodeResponseDto
 import com.vadimraspopin.mangotest.api.errors.NotFoundErrorResponse
 import com.vadimraspopin.mangotest.api.errors.NotFoundException
-import com.vadimraspopin.mangotest.api.requests.RegisterRequest
-import com.vadimraspopin.mangotest.api.responses.RegisterResponseDto
-import com.vadimraspopin.mangotest.api.requests.SendAuthCodeRequest
-import com.vadimraspopin.mangotest.api.responses.SendAuthCodeResponseDto
 import com.vadimraspopin.mangotest.api.errors.ValidationErrorResponse
 import com.vadimraspopin.mangotest.api.errors.ValidationException
+import com.vadimraspopin.mangotest.api.requests.CheckAuthCodeRequest
+import com.vadimraspopin.mangotest.api.requests.RegisterRequest
+import com.vadimraspopin.mangotest.api.requests.SendAuthCodeRequest
+import com.vadimraspopin.mangotest.api.responses.CheckAuthCodeResponseDto
+import com.vadimraspopin.mangotest.api.responses.RegisterResponseDto
+import com.vadimraspopin.mangotest.api.responses.SendAuthCodeResponseDto
+import com.vadimraspopin.mangotest.api.services.AuthApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Singleton
 
-class AuthRemoteDataSourceImpl(private val apiService: AuthApiService) : AuthRemoteDataSource {
-
-    val gson = Gson()
+@Singleton
+class AuthRemoteDataSourceImpl(
+    private val apiService: AuthApiService,
+    private val gson: Gson
+) : AuthRemoteDataSource {
 
     override fun sendAuthCode(phone: String): Flow<SendAuthCodeResponseDto> = flow {
         val response = apiService.sendAuthCode(SendAuthCodeRequest(phone))

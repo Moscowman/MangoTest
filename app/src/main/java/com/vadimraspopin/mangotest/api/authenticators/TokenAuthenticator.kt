@@ -17,7 +17,7 @@ class TokenAuthenticator(
         synchronized(this) {
             // Проверяем, не был ли токен уже обновлён другим потоком
             val newAccessToken = tokenProvider.getAccessToken()
-            if (response.request().header("Authorization") == "Bearer $newAccessToken") {
+            if (response.request.header("Authorization") == "Bearer $newAccessToken") {
                 val refreshToken = tokenProvider.getRefreshToken() ?: return null
 
                 val refreshResponse = runBlocking {
@@ -27,7 +27,7 @@ class TokenAuthenticator(
                 return if (refreshResponse.isSuccessful) {
                     val newTokens = refreshResponse.body() ?: return null
                     tokenProvider.saveTokens(newTokens.accessToken, newTokens.refreshToken)
-                    response.request().newBuilder()
+                    response.request.newBuilder()
                         .header("Authorization", "Bearer ${newTokens.accessToken}")
                         .build()
                 } else {
