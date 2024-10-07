@@ -1,5 +1,7 @@
 package com.vadimraspopin.mangotest.api.responses
 
+import com.google.gson.annotations.SerializedName
+
 data class UserResponseDto(
     val name: String,
     val username: String,
@@ -14,12 +16,12 @@ data class UserResponseDto(
     val online: Boolean,
     val created: String,
     val phone: String,
-    val completedTask: String,
+    @SerializedName("completed_task") val completedTask: String,
     val avatars: UserResponseDtoAvatars
 )
 
 data class UserResponseDtoAvatars (
     val avatar: String,
-    val bigAvatar: String,
-    val miniAvatar: String
+    @SerializedName("big_avatar") val bigAvatar: String,
+    @SerializedName("mini_avatar") val miniAvatar: String
 )

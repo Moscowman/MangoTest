@@ -16,7 +16,7 @@ object Routes {
 }
 
 @Composable
-fun MangoApp() {
+fun MangoNavigation() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "authorization") {

@@ -245,7 +245,15 @@ fun AuthorizationScreen(navController: NavHostController, authViewModel: AuthVie
             LaunchedEffect(checkAuthCodeState) {
                 if (checkAuthCodeState is ApiUiRequestState.Success) {
                     authViewModel.fullPhoneNumber = countryCodePickerState.getFullPhoneNumber()
-                    navController.navigate("registration/${authViewModel.fullPhoneNumber}")
+                    if ((checkAuthCodeState as ApiUiRequestState.Success).data.isUserExists) {
+                        navController.navigate(Routes.CHATS) {
+                            popUpTo(Routes.AUTHORIZATION) {
+                                inclusive = true
+                            }
+                        }
+                    } else {
+                        navController.navigate("registration/${authViewModel.fullPhoneNumber}")
+                    }
                     authViewModel.resetAuthCode()
                 }
             }

@@ -6,11 +6,14 @@ import com.vadimraspopin.mangotest.datasource.AuthRemoteDataSource
 import com.vadimraspopin.mangotest.model.CheckAuthCodeResponse
 import com.vadimraspopin.mangotest.model.RegisterResponse
 import com.vadimraspopin.mangotest.model.SendAuthCodeResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -25,10 +28,23 @@ class AuthRepositoryImpl @Inject constructor(
                 responseDto.toDomainModel()
             }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun checkAuthCode(phone: String, code: String): Flow<CheckAuthCodeResponse> =
         remoteDataSource.checkAuthCode(phone, code)
             .map { responseDto ->
                 responseDto.toDomainModel()
+            }
+            .flatMapConcat { response ->
+                if (response.isUserExists) {
+                    flow {
+                        if (response.accessToken != null && response.refreshToken != null) {
+                            tokenProvider.saveTokens(response.accessToken, response.refreshToken)
+                        }
+                        emit(response)
+                    }.flowOn(Dispatchers.IO)
+                } else {
+                    flowOf(response)
+                }
             }
 
     @OptIn(ExperimentalCoroutinesApi::class)
