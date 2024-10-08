@@ -15,9 +15,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.vadimraspopin.mangotest.model.Chat
+import com.vadimraspopin.mangotest.R
 import com.vadimraspopin.mangotest.viewmodel.ChatsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,12 +31,12 @@ fun ChatsScreen(viewModel: ChatsViewModel = hiltViewModel(),
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Чаты") },
+            TopAppBar(title = { Text(stringResource(R.string.chats_screen_title)) },
                 actions = {
                     IconButton(onClick = { onProfileClicked() }) {
                         Icon(
                             imageVector = Icons.Default.Person,
-                            contentDescription = "Профиль"
+                            contentDescription = stringResource(R.string.chats_screen_profile_content_description)
                         )
                     }
                 })

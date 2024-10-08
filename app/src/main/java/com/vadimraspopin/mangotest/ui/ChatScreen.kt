@@ -29,8 +29,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.vadimraspopin.mangotest.R
 import com.vadimraspopin.mangotest.model.Message
 import com.vadimraspopin.mangotest.viewmodel.ChatViewModel
 
@@ -42,7 +44,7 @@ fun ChatScreen(viewModel: ChatViewModel = hiltViewModel()) {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Чат") })
+            TopAppBar(title = { Text(stringResource(R.string.chat_screen_title)) })
         },
         bottomBar = {
             MessageInput(
@@ -56,7 +58,9 @@ fun ChatScreen(viewModel: ChatViewModel = hiltViewModel()) {
     ) { padding ->
         MessagesList(
             messages = messages,
-            modifier = Modifier.padding(padding).fillMaxSize()
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
         )
     }
 }
@@ -113,7 +117,11 @@ fun MessageInput(
             value = messageText,
             onValueChange = onMessageChange,
             modifier = Modifier.weight(1f),
-            placeholder = { Text("Введите сообщение") },
+            placeholder = {
+                Text(
+                    stringResource(R.string.chat_screen_message_textfield_suggestion)
+                )
+            },
             maxLines = 1,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedTextColor = MaterialTheme.colorScheme.onSurface,
@@ -126,7 +134,10 @@ fun MessageInput(
             )
         )
         IconButton(onClick = onSendClicked) {
-            Icon(imageVector = Icons.AutoMirrored.Filled.Send, contentDescription = "Отправить")
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.Send,
+                contentDescription = stringResource(R.string.chat_screen_send_button)
+            )
         }
     }
 }

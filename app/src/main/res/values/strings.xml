@@ -28,4 +28,9 @@
     <string name="profile_screen_zodiak_label">Знак зодиака</string>
     <string name="edit_profile_screen_save_button_label">Сохранить</string>
     <string name="edit_profile_profile_updated">Профиль успешно обновлен</string>
+    <string name="chats_screen_title">Чаты</string>
+    <string name="chats_screen_profile_content_description">Профиль</string>
+    <string name="chat_screen_title">Чат</string>
+    <string name="chat_screen_message_textfield_suggestion">Введите сообщение</string>
+    <string name="chat_screen_send_button">Отправить</string>
 </resources>
