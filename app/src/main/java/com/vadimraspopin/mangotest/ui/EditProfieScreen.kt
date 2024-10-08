@@ -21,11 +21,14 @@ import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -53,6 +56,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileScreen(viewModel: EditProfileViewModel = hiltViewModel()) {
     val currentUser by viewModel.currentUser.collectAsState()
@@ -101,146 +105,154 @@ fun EditProfileScreen(viewModel: EditProfileViewModel = hiltViewModel()) {
         ).show()
     }
 
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxSize()
-    ) {
-        Box(
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text(stringResource(R.string.edit_profile_screen_title)) })
+        },
+    ) { padding ->
+        Column(
             modifier = Modifier
-                .size(120.dp)
-                .align(Alignment.CenterHorizontally)
-                .clickable {
-                    galleryLauncher.launch("image/*")
-                },
-            contentAlignment = Alignment.Center
+                .padding(padding)
+                .padding(16.dp)
+                .fillMaxSize()
         ) {
-            if (avatarUri != null) {
-                Image(
-                    painter = rememberAsyncImagePainter(avatarUri),
-                    contentDescription = stringResource(
-                        R.string.edit_profile_screen_avatar_content_description
-                    ),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(CircleShape)
-                )
-            } else if (currentUser?.avatars?.avatar != null) {
-                AsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(
-                            buildFullImageUrl(
-                                BASE_API_URL, currentUser?.avatars?.avatar ?: ""
-                            )
-                        )
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = stringResource(
-                        R.string.edit_profile_screen_avatar_content_description
-                    ),
-                    contentScale = ContentScale.Crop,
-                )
-            } else {
-                Icon(
-                    imageVector = Icons.Default.AddAPhoto,
-                    contentDescription = stringResource(
-                        R.string.edit_profile_screen_select_avatar_content_description
-                    ),
-                    tint = Color.Gray,
-                    modifier = Modifier.size(60.dp)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = city,
-            onValueChange = { city = it },
-            label = { Text(stringResource(R.string.edit_profile_screen_city_label)) },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = birthday,
-            onValueChange = { /* Не обрабатываем изменения вручную */ },
-            label = { Text(stringResource(R.string.edit_profile_screen_birthday_label)) },
-            trailingIcon = {
-                IconButton(onClick = { showDatePicker = true }) {
-                    Icon(
-                        imageVector = Icons.Default.CalendarToday,
+            Box(
+                modifier = Modifier
+                    .size(120.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .clickable {
+                        galleryLauncher.launch("image/*")
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                if (avatarUri != null) {
+                    Image(
+                        painter = rememberAsyncImagePainter(avatarUri),
                         contentDescription = stringResource(
-                            R.string.edit_profile_screen_select_birthday_content_description
-                        )
+                            R.string.edit_profile_screen_avatar_content_description
+                        ),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape)
+                    )
+                } else if (currentUser?.avatars?.avatar != null) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(context)
+                            .data(
+                                buildFullImageUrl(
+                                    BASE_API_URL, currentUser?.avatars?.avatar ?: ""
+                                )
+                            )
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = stringResource(
+                            R.string.edit_profile_screen_avatar_content_description
+                        ),
+                        contentScale = ContentScale.Crop,
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.AddAPhoto,
+                        contentDescription = stringResource(
+                            R.string.edit_profile_screen_select_avatar_content_description
+                        ),
+                        tint = Color.Gray,
+                        modifier = Modifier.size(60.dp)
                     )
                 }
-            },
-            modifier = Modifier
-                .fillMaxWidth(),
-            readOnly = true
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
-            value = aboutMe,
-            onValueChange = { aboutMe = it },
-            label = { Text(stringResource(R.string.edit_profile_screen_about_label)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp),
-            maxLines = 4
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(
-            onClick = {
-                viewModel.updateProfile(
-                    name = currentUser?.name ?: "",
-                    username = currentUser?.username ?: "",
-                    city = city,
-                    birthday = birthday,
-                    aboutMe = aboutMe,
-                    avatarUri = avatarUri,
-                    context
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(R.string.edit_profile_screen_save_button_label))
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        when (val state = updateProfileState) {
-            is ApiUiRequestState.Loading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             }
 
-            is ApiUiRequestState.Success<User> -> {
-                Text(
-                    stringResource(R.string.edit_profile_profile_updated),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = city,
+                onValueChange = { city = it },
+                label = { Text(stringResource(R.string.edit_profile_screen_city_label)) },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = birthday,
+                onValueChange = { /* Не обрабатываем изменения вручную */ },
+                label = { Text(stringResource(R.string.edit_profile_screen_birthday_label)) },
+                trailingIcon = {
+                    IconButton(onClick = { showDatePicker = true }) {
+                        Icon(
+                            imageVector = Icons.Default.CalendarToday,
+                            contentDescription = stringResource(
+                                R.string.edit_profile_screen_select_birthday_content_description
+                            )
+                        )
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                readOnly = true
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = aboutMe,
+                onValueChange = { aboutMe = it },
+                label = { Text(stringResource(R.string.edit_profile_screen_about_label)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
+                maxLines = 4
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = {
+                    viewModel.updateProfile(
+                        name = currentUser?.name ?: "",
+                        username = currentUser?.username ?: "",
+                        city = city,
+                        birthday = birthday,
+                        aboutMe = aboutMe,
+                        avatarUri = avatarUri,
+                        context
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.edit_profile_screen_save_button_label))
             }
 
-            is ApiUiRequestState.Error -> {
-                val localizedMessages = state.messages.map { localizeUpdateProfileErrorMessage(it) }
+            Spacer(modifier = Modifier.height(16.dp))
 
-                val displayMessage = localizedMessages.joinToString(separator = "\n")
-                Text(
-                    text = displayMessage,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
+            when (val state = updateProfileState) {
+                is ApiUiRequestState.Loading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                }
+
+                is ApiUiRequestState.Success<User> -> {
+                    Text(
+                        stringResource(R.string.edit_profile_profile_updated),
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+
+                is ApiUiRequestState.Error -> {
+                    val localizedMessages =
+                        state.messages.map { localizeUpdateProfileErrorMessage(it) }
+
+                    val displayMessage = localizedMessages.joinToString(separator = "\n")
+                    Text(
+                        text = displayMessage,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+
+                else -> Unit
             }
-
-            else -> Unit
         }
     }
 }

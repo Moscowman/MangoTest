@@ -12,8 +12,11 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,26 +39,38 @@ import com.vadimraspopin.mangotest.R
 import com.vadimraspopin.mangotest.viewmodel.ProfileState
 import com.vadimraspopin.mangotest.viewmodel.ProfileViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavHostController, viewModel: ProfileViewModel = hiltViewModel()) {
     val profileState by viewModel.profileState.collectAsState()
 
-    when (profileState) {
-        is ProfileState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text(stringResource(R.string.profile_screen_title)) })
+        },
+    ) { padding ->
+        when (profileState) {
+            is ProfileState.Loading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
             }
-        }
 
-        is ProfileState.Success -> {
-            val user = (profileState as ProfileState.Success).user
-            ProfileContent(navController, user)
-        }
+            is ProfileState.Success -> {
+                val user = (profileState as ProfileState.Success).user
+                ProfileContent(navController, user)
+            }
 
-        is ProfileState.Error -> {
-            val message = (profileState as ProfileState.Error).message
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "Ошибка: $message")
+            is ProfileState.Error -> {
+                val message = (profileState as ProfileState.Error).message
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(text = "Ошибка: $message")
+                }
             }
         }
     }
@@ -85,11 +100,17 @@ fun ProfileContent(navController: NavHostController, user: User, modifier: Modif
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        InfoRow(label = stringResource(R.string.profile_screen_phone_label), value = user.phone ?: "")
+        InfoRow(
+            label = stringResource(R.string.profile_screen_phone_label),
+            value = user.phone ?: ""
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        InfoRow(label = stringResource(R.string.profile_screen_username_label), value = user.username)
+        InfoRow(
+            label = stringResource(R.string.profile_screen_username_label),
+            value = user.username
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 

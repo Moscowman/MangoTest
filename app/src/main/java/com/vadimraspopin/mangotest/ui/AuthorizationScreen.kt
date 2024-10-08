@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -69,22 +70,11 @@ fun AuthorizationScreen(navController: NavHostController, authViewModel: AuthVie
     )
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val snackbarHostState = remember { SnackbarHostState() }
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = MaterialTheme.colorScheme.background,
-        contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(stringResource(R.string.authorization_screen_title)) },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            )
-        }
+            TopAppBar(title = { Text(stringResource(R.string.authorization_screen_title)) })
+        },
     ) { paddingValues ->
         val configuration = LocalConfiguration.current
         val screenHeight = configuration.screenHeightDp.dp
