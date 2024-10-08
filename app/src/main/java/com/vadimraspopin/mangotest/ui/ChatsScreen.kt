@@ -18,8 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.vadimraspopin.mangotest.model.Chat
 import com.vadimraspopin.mangotest.R
+import com.vadimraspopin.mangotest.model.Chat
 import com.vadimraspopin.mangotest.viewmodel.ChatsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

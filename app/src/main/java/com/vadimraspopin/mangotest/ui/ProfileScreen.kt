@@ -32,10 +32,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.vadimraspopin.mangotest.R
 import com.vadimraspopin.mangotest.di.BASE_API_URL
 import com.vadimraspopin.mangotest.getZodiacSign
 import com.vadimraspopin.mangotest.model.User
-import com.vadimraspopin.mangotest.R
 import com.vadimraspopin.mangotest.viewmodel.ProfileState
 import com.vadimraspopin.mangotest.viewmodel.ProfileViewModel
 
