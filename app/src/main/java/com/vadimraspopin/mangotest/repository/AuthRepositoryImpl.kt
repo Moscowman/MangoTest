@@ -3,12 +3,14 @@ package com.vadimraspopin.mangotest.repository
 import com.vadimraspopin.mangotest.api.mappers.toDomainModel
 import com.vadimraspopin.mangotest.api.providers.TokenProvider
 import com.vadimraspopin.mangotest.datasource.AuthRemoteDataSource
+import com.vadimraspopin.mangotest.datasource.ProfilePreferences
 import com.vadimraspopin.mangotest.model.CheckAuthCodeResponse
 import com.vadimraspopin.mangotest.model.RegisterResponse
 import com.vadimraspopin.mangotest.model.SendAuthCodeResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -18,6 +20,7 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val remoteDataSource: AuthRemoteDataSource,
+    private val profilePreferences: ProfilePreferences,
     private val tokenProvider: TokenProvider
 ) :
     AuthRepository {
@@ -34,6 +37,11 @@ class AuthRepositoryImpl @Inject constructor(
                 responseDto.toDomainModel()
             }
             .flatMapConcat { response ->
+                val cachedUser = profilePreferences.profileFlow.firstOrNull()
+                if (cachedUser?.id?.toLong() != response.userId) {
+                    profilePreferences.clearProfile()
+                }
+
                 if (response.isUserExists) {
                     flow {
                         if (response.accessToken != null && response.refreshToken != null) {

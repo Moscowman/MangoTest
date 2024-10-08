@@ -48,25 +48,33 @@ fun ProfileScreen(navController: NavHostController, viewModel: ProfileViewModel 
         topBar = {
             TopAppBar(title = { Text(stringResource(R.string.profile_screen_title)) })
         },
-    ) { padding ->
+    ) { paddingValues ->
         when (profileState) {
             is ProfileState.Loading -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier.padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
                     CircularProgressIndicator()
                 }
             }
 
             is ProfileState.Success -> {
                 val user = (profileState as ProfileState.Success).user
-                ProfileContent(navController, user)
+                Box(
+                    modifier = Modifier
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    ProfileContent(navController, user)
+                }
             }
 
             is ProfileState.Error -> {
                 val message = (profileState as ProfileState.Error).message
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
+                        .padding(paddingValues),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(text = "Ошибка: $message")
@@ -89,14 +97,16 @@ fun ProfileContent(navController: NavHostController, user: User, modifier: Modif
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(context)
-                .data(buildFullImageUrl(BASE_API_URL, user.avatars?.avatar ?: ""))
-                .crossfade(true)
-                .build(),
-            contentDescription = "Avatar",
-            contentScale = ContentScale.Crop,
-        )
+        user.avatars?.avatar?.let { avatar ->
+            AsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(buildFullImageUrl(BASE_API_URL, avatar))
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "Avatar",
+                contentScale = ContentScale.Crop,
+            )
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 

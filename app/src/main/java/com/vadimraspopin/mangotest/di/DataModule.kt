@@ -39,9 +39,10 @@ object DataModule {
     @Singleton
     fun provideAuthRepository(
         dataSource: AuthRemoteDataSource,
+        profilePreferences: ProfilePreferences,
         tokenProvider: TokenProvider
     ): AuthRepository {
-        return AuthRepositoryImpl(dataSource, tokenProvider)
+        return AuthRepositoryImpl(dataSource, profilePreferences, tokenProvider)
     }
 
     @Provides
