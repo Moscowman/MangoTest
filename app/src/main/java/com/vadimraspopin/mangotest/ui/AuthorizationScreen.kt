@@ -164,7 +164,7 @@ fun AuthorizationScreen(navController: NavHostController, authViewModel: AuthVie
                 Spacer(modifier = Modifier.height(24.dp))
 
                 OutlinedTextField(
-                    value = code.value.toString(),
+                    value = code.value,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = MaterialTheme.colorScheme.onSurface,
                         unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
