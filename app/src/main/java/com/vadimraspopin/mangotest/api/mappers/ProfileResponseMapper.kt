@@ -4,12 +4,12 @@ import com.vadimraspopin.mangotest.api.responses.UserResponseDto
 import com.vadimraspopin.mangotest.model.User
 import com.vadimraspopin.mangotest.model.UserAvatars
 
-fun UserResponseDto.toDomainModel(): User {
-    return User(
+fun UserResponseDto.toDomainModel(): User = with(profileData) {
+    User(
         name = this.name,
         username = this.username,
         birthday = this.birthday,
-        city =  this.city,
+        city = this.city,
         vk = this.vk,
         instagram = this.instagram,
         status = this.status,
@@ -19,10 +19,12 @@ fun UserResponseDto.toDomainModel(): User {
         created = this.created,
         phone = this.phone,
         completedTask = this.completedTask,
-        avatars = UserAvatars(
-            avatar = this.avatars.avatar,
-            bigAvatar = this.avatars.bigAvatar,
-            miniAvatar = this.avatars.miniAvatar
-        )
+        avatars = avatars?.let {
+            UserAvatars(
+                avatar = it.avatar,
+                bigAvatar = it.bigAvatar,
+                miniAvatar = it.miniAvatar
+            )
+        }
     )
 }

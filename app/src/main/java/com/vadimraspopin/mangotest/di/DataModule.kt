@@ -1,5 +1,6 @@
 package com.vadimraspopin.mangotest.di
 
+import android.content.Context
 import com.google.gson.Gson
 import com.vadimraspopin.mangotest.BuildConfig
 import com.vadimraspopin.mangotest.api.authenticators.TokenAuthenticator
@@ -9,9 +10,10 @@ import com.vadimraspopin.mangotest.api.services.AuthApiService
 import com.vadimraspopin.mangotest.api.services.ProfileApiService
 import com.vadimraspopin.mangotest.datasource.AuthRemoteDataSource
 import com.vadimraspopin.mangotest.datasource.AuthRemoteDataSourceImpl
+import com.vadimraspopin.mangotest.datasource.ProfilePreferences
+import com.vadimraspopin.mangotest.datasource.ProfilePreferencesImpl
 import com.vadimraspopin.mangotest.datasource.ProfileRemoteDataSource
 import com.vadimraspopin.mangotest.datasource.ProfileRemoteDataSourceImpl
-import com.vadimraspopin.mangotest.datasource.UserPreferences
 import com.vadimraspopin.mangotest.repository.AuthRepository
 import com.vadimraspopin.mangotest.repository.AuthRepositoryImpl
 import com.vadimraspopin.mangotest.repository.ProfileRepository
@@ -19,6 +21,7 @@ import com.vadimraspopin.mangotest.repository.ProfileRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -54,9 +57,9 @@ object DataModule {
     @Singleton
     fun provideProfileRepository(
         dataSource: ProfileRemoteDataSource,
-        userPreferences: UserPreferences
+        profilePreferences: ProfilePreferences
     ): ProfileRepository {
-        return ProfileRepositoryImpl(dataSource, userPreferences)
+        return ProfileRepositoryImpl(dataSource, profilePreferences)
     }
 
     @Provides
@@ -66,6 +69,15 @@ object DataModule {
         gson: Gson
     ): ProfileRemoteDataSource {
         return ProfileRemoteDataSourceImpl(profileApiService, gson)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfilePreferences(
+        @ApplicationContext context: Context,
+        gson: Gson
+    ): ProfilePreferences {
+        return ProfilePreferencesImpl(context, gson)
     }
 
     @Provides

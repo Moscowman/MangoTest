@@ -9,4 +9,6 @@ interface ProfileRepository {
     fun fetchUser(): Flow<User>
 
     fun getCachedUser(): Flow<User?>
+
+    suspend fun clearCache()
 }

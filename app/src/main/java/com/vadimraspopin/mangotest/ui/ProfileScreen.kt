@@ -45,7 +45,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
 
 @Composable
 fun ProfileContent(user: User) {
-    val zodiacSign = remember(user.birthday) { getZodiacSign(user.birthday) }
+    val zodiacSign = remember(user.birthday) { user.birthday?.let {getZodiacSign(user.birthday)} ?: "" }
 
     Column(
         modifier = Modifier
@@ -63,7 +63,7 @@ fun ProfileContent(user: User) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        InfoRow(label = "Телефон", value = user.phone)
+        InfoRow(label = "Телефон", value = user.phone ?: "")
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -71,11 +71,11 @@ fun ProfileContent(user: User) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        InfoRow(label = "Город", value = user.city)
+        InfoRow(label = "Город", value = user.city ?: "")
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        InfoRow(label = "Дата рождения", value = user.birthday)
+        InfoRow(label = "Дата рождения", value = user.birthday ?: "")
 
         Spacer(modifier = Modifier.height(8.dp))
 

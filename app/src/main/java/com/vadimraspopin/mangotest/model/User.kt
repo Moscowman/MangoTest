@@ -3,22 +3,22 @@ package com.vadimraspopin.mangotest.model
 data class User(
     val name: String,
     val username: String,
-    val birthday: String,
-    val city: String,
-    val vk: String,
-    val instagram: String,
-    val status: String,
+    val birthday: String?,
+    val city: String?,
+    val vk: String?,
+    val instagram: String?,
+    val status: String?,
     val id: Int,
-    val last: String,
+    val last: String?,
     val online: Boolean,
-    val created: String,
-    val phone: String,
-    val completedTask: String,
-    val avatars: UserAvatars
+    val created: String?,
+    val phone: String?,
+    val completedTask: String?,
+    val avatars: UserAvatars?
 )
 
 data class UserAvatars (
-    val avatar: String,
-    val bigAvatar: String,
-    val miniAvatar: String
+    val avatar: String?,
+    val bigAvatar: String?,
+    val miniAvatar: String?
 )
