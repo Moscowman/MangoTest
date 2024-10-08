@@ -35,13 +35,11 @@ class ProfileViewModel @Inject constructor(private val repository: ProfileReposi
                 .catch { e ->
                     when (e) {
                         is ValidationException ->
-                            //TODO
                             ApiUiRequestState.Error(
                                 e.error.detail.map { it.msg }
                             )
 
                         else ->
-                            //TODO
                             ApiUiRequestState.Error(listOf(e.message ?: "Unknown error"))
                     }
                 }
@@ -49,10 +47,5 @@ class ProfileViewModel @Inject constructor(private val repository: ProfileReposi
                     _profileState.value = ProfileState.Success(result)
                 }
         }
-    }
-
-    fun refreshUser() {
-        _profileState.value = ProfileState.Loading
-        fetchUser()
     }
 }

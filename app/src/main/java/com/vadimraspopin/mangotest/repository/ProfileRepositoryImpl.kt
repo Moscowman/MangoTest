@@ -1,12 +1,14 @@
 package com.vadimraspopin.mangotest.repository
 
 import com.vadimraspopin.mangotest.api.mappers.toDomainModel
+import com.vadimraspopin.mangotest.api.requests.ProfileUpdateRequest
 import com.vadimraspopin.mangotest.datasource.ProfilePreferences
 import com.vadimraspopin.mangotest.datasource.ProfileRemoteDataSource
 import com.vadimraspopin.mangotest.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
@@ -44,4 +46,25 @@ class ProfileRepositoryImpl @Inject constructor(
     override suspend fun clearCache() {
         profilePreferences.clearProfile()
     }
+
+    override fun updateProfile(profileUpdateRequest: ProfileUpdateRequest): Flow<User> =
+        profileRemoteDataSource.updateProfile(profileUpdateRequest)
+            .map { responseDto ->
+                responseDto.toDomainModel()
+            }
+            .map { updatedUserFromApi ->
+                val cachedUser = profilePreferences.profileFlow.firstOrNull()
+                cachedUser?.copy(
+                    name = profileUpdateRequest.name,
+                    username = profileUpdateRequest.username,
+                    city = profileUpdateRequest.city,
+                    birthday = profileUpdateRequest.birthday,
+                    status = profileUpdateRequest.status,
+                    avatars = updatedUserFromApi.avatars
+                ) ?: updatedUserFromApi
+            }
+            .onEach { mergedUser ->
+                profilePreferences.saveProfile(mergedUser)
+            }
+            .flowOn(Dispatchers.IO)
 }

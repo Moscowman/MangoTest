@@ -13,6 +13,7 @@ object Routes {
     const val CHATS = "chats"
     const val CHAT = "chat/{chatId}"
     const val PROFILE = "profile"
+    const val EDIT_PROFILE = "editProfile"
 }
 
 @Composable
@@ -43,7 +44,10 @@ fun MangoNavigation() {
             ChatScreen()
         }
         composable(Routes.PROFILE) {
-            ProfileScreen()
+            ProfileScreen(navController)
+        }
+        composable(Routes.EDIT_PROFILE) {
+            EditProfileScreen()
         }
     }
 }

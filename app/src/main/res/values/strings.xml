@@ -14,4 +14,18 @@
     <string name="registration_screen_username_already_exists_error_message">Пользователь с таким никнеймом уже существует</string>
     <string name="registration_screen_phone_already_exists_error_message">Пользователь с таким номером телефона уже существует</string>
     <string name="registration_screen_five_characters_error_message">Поле должно быть длиной не менее 5 символов</string>
+    <string name="edit_profile_screen_avatar_content_description">Аватар</string>
+    <string name="edit_profile_screen_select_avatar_content_description">Выбрать аватар</string>
+    <string name="edit_profile_screen_select_birthday_content_description">Выбрать аватар</string>
+    <string name="edit_profile_screen_birthday_label">Дата рождения</string>
+    <string name="edit_profile_screen_city_label">Город</string>
+    <string name="edit_profile_screen_about_label">Обо мне</string>
+    <string name="profile_screen_birthday_label">Дата рождения</string>
+    <string name="profile_screen_city_label">Город</string>
+    <string name="profile_screen_about_label">Обо мне</string>
+    <string name="profile_screen_phone_label">Телефон</string>
+    <string name="profile_screen_username_label">Никнейм</string>
+    <string name="profile_screen_zodiak_label">Знак зодиака</string>
+    <string name="edit_profile_screen_save_button_label">Сохранить</string>
+    <string name="edit_profile_profile_updated">Профиль успешно обновлен</string>
 </resources>

@@ -8,6 +8,7 @@ data class User(
     val vk: String?,
     val instagram: String?,
     val status: String?,
+    val avatar: String?,
     val id: Int,
     val last: String?,
     val online: Boolean,

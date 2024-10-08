@@ -1,25 +1,43 @@
 package com.vadimraspopin.mangotest
 
-import java.time.LocalDate
-import java.time.MonthDay
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 fun getZodiacSign(birthDate: String): String {
-    val date = LocalDate.parse(birthDate)
-    val monthDay = MonthDay.from(date)
+    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val calendar = Calendar.getInstance()
 
-    return when {
-        monthDay >= MonthDay.of(3, 21) && monthDay <= MonthDay.of(4, 19) -> "Овен"
-        monthDay >= MonthDay.of(4, 20) && monthDay <= MonthDay.of(5, 20) -> "Телец"
-        monthDay >= MonthDay.of(5, 21) && monthDay <= MonthDay.of(6, 20) -> "Близнецы"
-        monthDay >= MonthDay.of(6, 21) && monthDay <= MonthDay.of(7, 22) -> "Рак"
-        monthDay >= MonthDay.of(7, 23) && monthDay <= MonthDay.of(8, 22) -> "Лев"
-        monthDay >= MonthDay.of(8, 23) && monthDay <= MonthDay.of(9, 22) -> "Дева"
-        monthDay >= MonthDay.of(9, 23) && monthDay <= MonthDay.of(10, 22) -> "Весы"
-        monthDay >= MonthDay.of(10, 23) && monthDay <= MonthDay.of(11, 21) -> "Скорпион"
-        monthDay >= MonthDay.of(11, 22) && monthDay <= MonthDay.of(12, 21) -> "Стрелец"
-        monthDay >= MonthDay.of(12, 22) || monthDay <= MonthDay.of(1, 19) -> "Козерог"
-        monthDay >= MonthDay.of(1, 20) && monthDay <= MonthDay.of(2, 18) -> "Водолей"
-        monthDay >= MonthDay.of(2, 19) && monthDay <= MonthDay.of(3, 20) -> "Рыбы"
-        else -> "Неизвестно"
+    return try {
+        val date = sdf.parse(birthDate)
+
+        if (date != null) {
+            calendar.time = date
+
+            val month = calendar.get(Calendar.MONTH) + 1
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            when {
+                (month == 3 && day >= 21) || (month == 4 && day <= 19) -> "Овен"
+                (month == 4 && day >= 20) || (month == 5 && day <= 20) -> "Телец"
+                (month == 5 && day >= 21) || (month == 6 && day <= 20) -> "Близнецы"
+                (month == 6 && day >= 21) || (month == 7 && day <= 22) -> "Рак"
+                (month == 7 && day >= 23) || (month == 8 && day <= 22) -> "Лев"
+                (month == 8 && day >= 23) || (month == 9 && day <= 22) -> "Дева"
+                (month == 9 && day >= 23) || (month == 10 && day <= 22) -> "Весы"
+                (month == 10 && day >= 23) || (month == 11 && day <= 21) -> "Скорпион"
+                (month == 11 && day >= 22) || (month == 12 && day <= 21) -> "Стрелец"
+                (month == 12 && day >= 22) || (month == 1 && day <= 19) -> "Козерог"
+                (month == 1 && day >= 20) || (month == 2 && day <= 18) -> "Водолей"
+                (month == 2 && day >= 19) || (month == 3 && day <= 20) -> "Рыбы"
+                else -> "Неизвестно"
+            }
+        } else {
+            "Неизвестно"
+        }
+    } catch (e: ParseException) {
+        e.printStackTrace()
+        "Неизвестно"
     }
 }

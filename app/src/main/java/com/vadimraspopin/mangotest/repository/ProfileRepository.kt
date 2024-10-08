@@ -1,5 +1,6 @@
 package com.vadimraspopin.mangotest.repository
 
+import com.vadimraspopin.mangotest.api.requests.ProfileUpdateRequest
 import com.vadimraspopin.mangotest.model.User
 import kotlinx.coroutines.flow.Flow
 
@@ -11,4 +12,6 @@ interface ProfileRepository {
     fun getCachedUser(): Flow<User?>
 
     suspend fun clearCache()
+
+    fun updateProfile(profileUpdateRequest: ProfileUpdateRequest): Flow<User>
 }

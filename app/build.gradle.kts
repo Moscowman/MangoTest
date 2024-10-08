@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.logging.interceptor)
+    implementation(libs.coil.compose)
     ksp(libs.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

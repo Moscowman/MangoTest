@@ -26,6 +26,6 @@ data class UserResponseProfileData(
 
 data class UserResponseDtoAvatars (
     val avatar: String?,
-    @SerializedName("big_avatar") val bigAvatar: String?,
-    @SerializedName("mini_avatar") val miniAvatar: String?
+    val bigAvatar: String?,
+    val miniAvatar: String?
 )
